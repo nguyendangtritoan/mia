@@ -1,11 +1,11 @@
 {
-  "name": "my-portfolio",
+  "name": "mia",
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://nguyendangtritoan.github.io/my-portfolio/", 
+  "homepage": "https://nguyendangtritoan.github.io/mia/", 
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --base=/my-portfolio/",
+    "build": "tsc && vite build --base=/mia/",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build", 
