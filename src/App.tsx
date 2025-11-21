@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, Mail, Phone, MapPin, Linkedin, ExternalLink, Download, Palette, Layout, Users, Code, Briefcase, GraduationCap, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Menu, X, Mail, Phone, MapPin, Palette, Layout, Users, GraduationCap, ChevronRight } from 'lucide-react';
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
