@@ -7,5 +7,5 @@ export default defineConfig({
   // IMPORTANT: This must match your GitHub repository name exactly
   // If your repo is https://github.com/User/portfolio, this should be '/portfolio/'
   // Example: if your repo is called "design-work", change this to: base: '/design-work/'
-  base: './', 
+  base: '/my-portfolio', 
 })
