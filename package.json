@@ -5,7 +5,7 @@
   "homepage": "https://nguyendangtritoan.github.io/my-portfolio/", 
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build --base=/my-portfolio/",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build", 
