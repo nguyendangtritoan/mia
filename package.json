@@ -2,7 +2,7 @@
   "name": "my-portfolio",
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://nguyendangtoan.github.io/my-portfolio", 
+  "homepage": "https://nguyendangtoan.github.io/my-portfolio/", 
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
