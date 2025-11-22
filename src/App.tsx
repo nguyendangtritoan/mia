@@ -1,23 +1,24 @@
-import { useState, useEffect } from 'react';
-import { Menu, X, Mail, Phone, MapPin, Palette, Layout, Users, GraduationCap, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Menu, X, Mail, Phone, MapPin, Download, Palette, Layout, Users, Code, Briefcase, GraduationCap, ChevronRight, FileText, User, Home, Folder, History } from 'lucide-react';
+import EncowayLogo from './EncowayLogo';
+import KukaLogo from './KukaLogo';
+import VWLogo from './VWLogo';
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [scrolled, setScrolled] = useState(false);
 
-  // Handle scroll effects
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
       
-      // Active section detection
       const sections = ['home', 'about', 'experience', 'projects', 'contact'];
       const current = sections.find(section => {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
+          return rect.top <= window.innerHeight / 3 && rect.bottom >= window.innerHeight / 3;
         }
         return false;
       });
@@ -32,9 +33,24 @@ const App = () => {
     setIsMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      const offset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
   };
+
+  const navItems = [
+    { id: 'home', label: 'Home', icon: <Home size={20} /> },
+    { id: 'about', label: 'About', icon: <User size={20} /> },
+    { id: 'experience', label: 'Experience', icon: <History size={20} /> },
+    { id: 'projects', label: 'Work', icon: <Folder size={20} /> },
+    { id: 'contact', label: 'Contact', icon: <Mail size={20} /> },
+  ];
 
   const experiences = [
     {
@@ -96,48 +112,83 @@ const App = () => {
     tools: ["Figma", "Adobe XD", "Adobe InDesign", "Illustrator", "Photoshop", "Sketch", "Miro", "Axure 9"],
     languages: ["Deutsch (C1)", "Englisch (B2)", "Vietnamesisch (Muttersprache)"]
   };
+  
+  const resumeUrl = "Phan My Anh Nguyen_Lebenslauf.pdf"; 
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-200 selection:text-blue-900">
       
       {/* Navigation */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'}`}>
-        <div className="container mx-auto px-6 flex justify-between items-center">
-          <div className="text-2xl font-bold tracking-tighter cursor-pointer" onClick={() => scrollTo('home')}>
-            PMN<span className="text-blue-600">.</span>
+      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'py-4' : 'py-6'}`}>
+        <div className="container mx-auto px-6 flex justify-center items-center relative">
+          
+          {/* Logo (Left Side) */}
+          <div className="absolute left-6 md:left-12 top-1/2 transform -translate-y-1/2 cursor-pointer" onClick={() => scrollTo('home')}>
+             <span className="text-2xl font-bold tracking-tighter text-slate-900">PMN<span className="text-blue-600">.</span></span>
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
-            {['About', 'Experience', 'Projects', 'Contact'].map((item) => (
-              <button 
-                key={item}
-                onClick={() => scrollTo(item.toLowerCase())}
-                className={`hover:text-blue-600 transition-colors ${activeSection === item.toLowerCase() ? 'text-blue-600' : ''}`}
-              >
-                {item}
-              </button>
-            ))}
+          <div className="hidden md:flex bg-slate-900 rounded-full p-1.5 shadow-2xl border border-slate-800 gap-1">
+            {navItems.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
+                <button 
+                  key={item.id}
+                  onClick={() => scrollTo(item.id)}
+                  className={`
+                    group flex items-center rounded-full p-2.5 transition-all duration-300 ease-in-out
+                    ${isActive ? 'bg-white text-slate-900' : 'text-slate-400 hover:text-slate-900 hover:bg-white'}
+                  `}
+                >
+                  <span className="relative z-10">
+                    {item.icon}
+                  </span>
+                  <span className={`
+                    overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out font-medium text-sm
+                    ${isActive ? 'max-w-[100px] opacity-100 ml-2' : 'max-w-0 opacity-0 group-hover:max-w-[100px] group-hover:opacity-100 group-hover:ml-2'}
+                  `}>
+                    {item.label}
+                  </span>
+                </button>
+              );
+            })}
           </div>
+          
+          {/* CV Download Button */}
+          <a
+            href={resumeUrl}
+            download="Phan_My_Anh_Nguyen_CV.pdf"
+            className="absolute right-6 md:right-12 top-1/2 transform -translate-y-1/2 hidden md:flex items-center px-5 py-2.5 bg-white rounded-full shadow-lg border border-slate-100 text-sm font-medium text-slate-700 hover:shadow-xl hover:text-blue-600 hover:border-blue-100 transition-all active:scale-95"
+          >
+            <FileText size={16} className="mr-2" />
+            Resume
+          </a>
 
           {/* Mobile Menu Toggle */}
-          <button className="md:hidden p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          <button className="md:hidden absolute right-6 top-1/2 transform -translate-y-1/2 p-3 bg-white rounded-full shadow-lg border" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? <X size={24} className="text-slate-800" /> : <Menu size={24} className="text-slate-800" />}
           </button>
         </div>
 
         {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
-          <div className="absolute top-full left-0 w-full bg-white shadow-lg py-4 md:hidden flex flex-col items-center space-y-4 border-t">
-            {['About', 'Experience', 'Projects', 'Contact'].map((item) => (
+          <div className="absolute top-full left-0 w-full bg-white shadow-lg py-4 md:hidden flex flex-col items-center space-y-4 border-t animate-in slide-in-from-top-5">
+            {navItems.map((item) => (
               <button 
-                key={item}
-                onClick={() => scrollTo(item.toLowerCase())}
-                className="text-slate-600 font-medium py-2 hover:text-blue-600"
+                key={item.id}
+                onClick={() => scrollTo(item.id)}
+                className="text-slate-600 font-medium py-2 hover:text-blue-600 flex items-center gap-2"
               >
-                {item}
+                {item.icon} {item.label}
               </button>
             ))}
+            <a 
+              href={resumeUrl}
+              download="Phan_My_Anh_Nguyen_CV.pdf"
+              className="px-4 py-2 bg-blue-600 text-white rounded-full font-medium flex items-center gap-2 hover:bg-blue-700 transition-colors"
+            >
+              <Download size={16} /> CV Herunterladen
+            </a>
           </div>
         )}
       </nav>
@@ -169,16 +220,17 @@ const App = () => {
               >
                 Meine Arbeiten ansehen <ChevronRight size={18} />
               </button>
-              <button 
-                onClick={() => scrollTo('contact')}
+              <a 
+                href={resumeUrl}
+                download="Phan_My_Anh_Nguyen_CV.pdf"
                 className="px-8 py-4 bg-white border border-slate-200 text-slate-700 rounded-full font-medium hover:border-slate-400 transition-all flex items-center gap-2"
               >
-                Kontaktieren <Mail size={18} />
-              </button>
+                CV Herunterladen <Download size={18} />
+              </a>
             </div>
           </div>
 
-          {/* Stats/Highlights */}
+          {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 border-t pt-10 border-slate-200">
             <div>
               <div className="text-3xl font-bold text-slate-900">3+</div>
@@ -223,6 +275,13 @@ const App = () => {
                   <div className="text-sm text-slate-500">Universität Regensburg | GPA: 2.0</div>
                   <div className="text-sm text-slate-400 mt-1">Nebenfächer: Volkswirtschaftslehre, Medienwissenschaft</div>
                 </div>
+              </div>
+              
+              <div className="mt-8">
+                <div className="w-24 h-24 rounded-full bg-blue-100 border-4 border-white shadow-lg flex items-center justify-center">
+                  <User size={48} className="text-blue-500" />
+                </div>
+                <p className="text-sm text-slate-500 mt-2">Phan My Anh Nguyen</p>
               </div>
             </div>
 
@@ -326,10 +385,19 @@ const App = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {projects.map((project, index) => (
               <div key={index} className="group relative bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 hover:shadow-xl transition-all duration-300 flex flex-col h-full">
-                {/* Abstract Visual Representation since we have no images */}
                 <div className={`h-48 w-full ${project.color} flex items-center justify-center overflow-hidden relative`}>
                   <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#475569_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                  <Layout className="text-slate-900/10 w-32 h-32 transform group-hover:scale-110 transition-transform duration-500" />
+                  
+                  {/* Logo Switching Logic */}
+                  {project.title === "Volkswagen Internal Hub" && (
+                    <VWLogo className="w-32 h-32 transform group-hover:scale-110 transition-transform duration-500 opacity-80 mix-blend-multiply" />
+                  )}
+                  {project.title === "KUKA Smart Handheld" && (
+                    <KukaLogo className="w-40 h-auto transform group-hover:scale-110 transition-transform duration-500 opacity-80 mix-blend-multiply" />
+                  )}
+                  {project.title === "Encoway UX Audit" && (
+                    <EncowayLogo className="w-32 h-32 transform group-hover:scale-110 transition-transform duration-500 opacity-50 mix-blend-multiply" />
+                  )}
                 </div>
 
                 <div className="p-8 flex-1 flex flex-col">
