@@ -1,15 +1,136 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Mail, Phone, MapPin, Download, Palette, Layout, Users, Code, Briefcase, GraduationCap, ChevronRight, FileText, User, Home, Folder, History, Linkedin, Eye } from 'lucide-react';
-import EncowayLogo from './EncowayLogo';
-import KukaLogo from './KukaLogo';
-import VWLogo from './VWLogo';
-import profileImage from './assets/profile.jpg'; 
+import { Menu, X, Mail, Phone, MapPin, Download, Palette, Layout, Users, Code, Briefcase, GraduationCap, ChevronRight, FileText, User, Home, Folder, History, Linkedin, Eye, Sparkles, Heart } from 'lucide-react';
+
+// --- INLINE LOGO COMPONENTS ---
+
+const LotusIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+    <path d="M11.56 2.678c.15-.37.69-.37.84 0 .66 1.61 2.2 4.44 4.6 6.23 2.08 1.55 4.63 1.98 4.63 4.38 0 2.8-2.3 5.2-5.2 5.2-1.56 0-3.22-.74-4.43-1.94-1.21 1.2-2.87 1.94-4.43 1.94-2.9 0-5.2-2.4-5.2-5.2 0-2.4 2.55-2.83 4.63-4.38 2.4-1.79 3.94-4.62 4.6-6.23z" />
+  </svg>
+);
+
+const EncowayLogo = ({ className }: { className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 500 153.32" 
+    className={className}
+    aria-label="Encoway Logo"
+  >
+    <style>{`.cls-1{fill:#0077c8;}`}</style>
+    <path className="cls-1" d="M372.76,30H394.5a8.73,8.73,0,0,1,7.79-7.79V.49A30.43,30.43,0,0,0,372.76,30Z" transform="translate(-0.31 -0.48)"></path>
+    <line className="cls-1" x1="402.38" y1="22.11" x2="402.38" y2="22.11"></line>
+    <path className="cls-1" d="M424.75,9.39A30.22,30.22,0,0,0,404.12.49V22.23a8.77,8.77,0,0,1,7.78,7.69h21.74A30.24,30.24,0,0,0,424.75,9.39Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M402.29,61.33V39.6a30.4,30.4,0,0,0-29.52,29.49H394.5A8.77,8.77,0,0,1,402.29,61.33Z" transform="translate(-0.31 -0.48)"></path>
+    <rect className="cls-1" x="403.81" y="39.1" width="6.02" height="21.7"></rect>
+    <polygon className="cls-1" points="411.65 62.22 411.65 68.61 433.34 68.61 433.34 31.36 411.65 31.36 411.65 37.68 411.65 62.22"></polygon>
+    <path className="cls-1" d="M394.5,71H372.77a30.4,30.4,0,0,0,29.52,29.49V78.71A8.77,8.77,0,0,1,394.5,71Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M433.64,71H411.9a8.77,8.77,0,0,1-7.78,7.76v21.73A30.4,30.4,0,0,0,433.64,71Z" transform="translate(-0.31 -0.48)"></path>
+    <rect className="cls-1" x="133.32" y="31.46" width="21.66" height="37.19"></rect>
+    <path className="cls-1" d="M194.43,30.11A30.36,30.36,0,0,0,165,.63v21.7a8.76,8.76,0,0,1,7.79,7.78Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M133.65,30.11h21.69a8.76,8.76,0,0,1,7.79-7.78V.63a30.36,30.36,0,0,0-29.48,29.48Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M163.13,100.44V78.74a8.76,8.76,0,0,1-7.77-7.65H133.65a30.37,30.37,0,0,0,29.48,29.35Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M165,78.74v21.7A30.36,30.36,0,0,0,194.43,71H172.74A8.75,8.75,0,0,1,165,78.74Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M29.8,22.33V.63A30.36,30.36,0,0,0,.32,30.11H22A8.75,8.75,0,0,1,29.8,22.33Z" transform="translate(-0.31 -0.48)"></path>
+    <polygon className="cls-1" points="21.66 68.65 21.66 62.31 21.66 37.8 21.66 31.45 0 31.45 0 68.65 21.66 68.65"></polygon>
+    <path className="cls-1" d="M29.8,100.44V78.74A8.74,8.74,0,0,1,22,71H.32A30.36,30.36,0,0,0,29.8,100.44Z" transform="translate(-0.31 -0.48)"></path>
+    <rect className="cls-1" x="39.15" y="31.46" width="21.66" height="5.94"></rect>
+    <path className="cls-1" d="M61.11,30.05A30.36,30.36,0,0,0,31.63.63v21.7a8.74,8.74,0,0,1,7.77,7.72Z" transform="translate(-0.31 -0.48)"></path>
+    <polygon className="cls-1" points="23.49 39.22 23.49 60.88 60.81 60.88 60.81 39.22 37.73 39.22 23.49 39.22"></polygon>
+    <path className="cls-1" d="M31.63,78.74v21.7A30.36,30.36,0,0,0,61.11,71H39.41A8.73,8.73,0,0,1,31.63,78.74Z" transform="translate(-0.31 -0.48)"></path>
+    <rect className="cls-1" x="105.83" y="70.49" width="21.64" height="29.47"></rect>
+    <rect className="cls-1" x="105.83" y="31.32" width="21.64" height="37.3"></rect>
+    <path className="cls-1" d="M98.3.48V22.16a8.78,8.78,0,0,1,7.79,7.78h21.67A30.36,30.36,0,0,0,98.3.48Z" transform="translate(-0.31 -0.48)"></path>
+    <rect className="cls-1" x="66.66" y="70.49" width="21.64" height="29.47"></rect>
+    <path className="cls-1" d="M96.44,22.16V.48A30.36,30.36,0,0,0,67,29.94H88.65A8.79,8.79,0,0,1,96.44,22.16Z" transform="translate(-0.31 -0.48)"></path>
+    <rect className="cls-1" x="66.66" y="31.32" width="21.64" height="37.3"></rect>
+    <rect className="cls-1" x="266.63" y="31.41" width="21.66" height="37.24"></rect>
+    <rect className="cls-1" x="266.63" y="0.09" width="21.66" height="29.49"></rect>
+    <rect className="cls-1" x="305.78" y="39.16" width="21.66" height="29.49"></rect>
+    <path className="cls-1" d="M288.66,71H267a30.37,30.37,0,0,0,29.48,29.4V78.74A8.75,8.75,0,0,1,288.66,71Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M337.41,78.74v21.7A30.37,30.37,0,0,0,366.89,71H345.18A8.75,8.75,0,0,1,337.41,78.74Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M327.8,71H306a8.73,8.73,0,0,1-7.78,7.78v21.7a30.19,30.19,0,0,0,18.09-6.66l.32-.25.25-.21.25.21.32.25a30.19,30.19,0,0,0,18.09,6.66V78.74A8.74,8.74,0,0,1,327.8,71Z" transform="translate(-0.31 -0.48)"></path>
+    <rect className="cls-1" x="344.93" y="31.41" width="21.66" height="37.24"></rect>
+    <rect className="cls-1" x="344.93" y="0.09" width="21.66" height="29.49"></rect>
+    <rect className="cls-1" x="478.37" y="31.33" width="21.63" height="37.3"></rect>
+    <path className="cls-1" d="M470.84,100.43A30.36,30.36,0,0,0,500.3,71H478.63a8.79,8.79,0,0,1-7.79,7.78Z" transform="translate(-0.31 -0.48)"></path>
+    <rect className="cls-1" x="439.2" width="21.63" height="29.47"></rect>
+    <path className="cls-1" d="M448.41,52.39A30.21,30.21,0,0,0,469,61.27V39.6a8.78,8.78,0,0,1-7.78-7.79H439.53A30.15,30.15,0,0,0,448.41,52.39Z" transform="translate(-0.31 -0.48)"></path>
+    <polygon className="cls-1" points="500 5.97 500 5.97 500 0 478.37 0 478.37 29.47 500 29.47 500 6.37 500 5.97"></polygon>
+    <rect className="cls-1" x="470.53" y="39.16" width="5.97" height="21.63"></rect>
+    <rect className="cls-1" x="439.21" y="78.32" width="29.47" height="21.63"></rect>
+    <path className="cls-1" d="M261.08,71H239.41a8.78,8.78,0,0,1-7.78,7.78v21.67A30.36,30.36,0,0,0,261.08,71Z" transform="translate(-0.31 -0.48)"></path>
+    <rect className="cls-1" x="239.15" y="31.34" width="21.63" height="37.3"></rect>
+    <rect className="cls-1" x="199.99" y="31.34" width="21.63" height="37.3"></rect>
+    <path className="cls-1" d="M231.62.51V22.18A8.78,8.78,0,0,1,239.41,30h21.67A30.36,30.36,0,0,0,231.62.51Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M229.76,22.18V.51A30.36,30.36,0,0,0,200.31,30H222A8.77,8.77,0,0,1,229.76,22.18Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M229.76,100.44V78.77A8.77,8.77,0,0,1,222,71H200.31a30.36,30.36,0,0,0,29.45,29.45Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M30.26,150v-21.7a8.73,8.73,0,0,1-7.78-7.78H.78A30.36,30.36,0,0,0,30.26,150Z" transform="translate(-0.31 -0.48)"></path>
+    <rect className="cls-1" x="31.78" y="112.22" width="21.64" height="37.3"></rect>
+    <rect className="cls-1" x="55.24" y="120.06" width="21.64" height="29.47"></rect>
+    <rect className="cls-1" x="78.7" y="127.83" width="6.02" height="21.7"></rect>
+    <path className="cls-1" d="M116.4,120.53H94.64a8.74,8.74,0,0,1-7.78,7.78V150A30.19,30.19,0,0,0,105,143.35l.32-.25.25-.21.25.21.32.25A30.19,30.19,0,0,0,124.18,150v-21.7A8.73,8.73,0,0,1,116.4,120.53Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M144.87,132.86l-.87,1.6a9.32,9.32,0,0,0-3.9-1c-2,0-3.57.94-3.57,2.48,0,1.12.85,1.78,2.39,2.24l2.21.63c2.32.67,4,1.88,4,4.29s-2.18,4.24-5.6,4.24a12,12,0,0,1-6-1.61l.91-1.63a10.05,10.05,0,0,0,5,1.39c2.42,0,3.6-1.12,3.6-2.39s-1.21-2-2.72-2.44l-2.12-.61c-2.38-.69-3.74-2.08-3.74-4.14,0-2.57,2.11-4.29,5.41-4.29A11.91,11.91,0,0,1,144.87,132.86Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M151.7,132h4.9v1.66h-4.9v8.86c0,2.11,1.12,3,2.69,3a5.7,5.7,0,0,0,2.42-.54l.61,1.6a6.68,6.68,0,0,1-3.12.79,4.33,4.33,0,0,1-4.68-4.57v-9.16h-2.57V132h2.57l.48-4.63h1.6Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M172.32,138.12V147h-2.06V144.4a6.49,6.49,0,0,1-5.59,3c-3.57,0-5.92-1.88-5.92-4.72s2.35-4.62,5.89-4.62a12.58,12.58,0,0,1,5.53,1.3V138a4.24,4.24,0,0,0-4.53-4.44,9,9,0,0,0-5,1.6l-.79-1.54a9.37,9.37,0,0,1,5.9-1.93A6.16,6.16,0,0,1,172.32,138.12Zm-11.49,4.5c0,1.75,1.66,2.93,4.17,2.93a6.57,6.57,0,0,0,5.26-3v-1.78a13.23,13.23,0,0,0-5.35-1.15C162.46,139.63,160.83,140.81,160.83,142.62Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M190.54,138.45V147h-2v-8.58c0-3.11-1.72-5-4.11-5-2.9,0-5.17,2.3-5.23,6.14V147h-2.06V132h2.06v3.26a5.64,5.64,0,0,1,5.35-3.59C188,131.65,190.54,134.19,190.54,138.45Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M209.89,147h-2.06v-3.17a7,7,0,0,1-6.1,3.51c-4.54,0-7.53-3.18-7.53-7.86s3-7.86,7.53-7.86a7,7,0,0,1,6.1,3.5v-10h2.06Zm-13.63-7.52c0,3.56,2.23,6,5.65,6a6,6,0,0,0,0-12C198.49,133.49,196.26,135.94,196.26,139.51Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M227.06,138.12V147H225V144.4a6.5,6.5,0,0,1-5.59,3c-3.57,0-5.92-1.88-5.92-4.72s2.35-4.62,5.89-4.62a12.58,12.58,0,0,1,5.53,1.3V138a4.24,4.24,0,0,0-4.53-4.44,9,9,0,0,0-5,1.6l-.79-1.54a9.37,9.37,0,0,1,5.9-1.93A6.16,6.16,0,0,1,227.06,138.12Zm-11.49,4.5c0,1.75,1.66,2.93,4.17,2.93a6.57,6.57,0,0,0,5.26-3v-1.78a13.23,13.23,0,0,0-5.35-1.15C217.2,139.63,215.57,140.81,215.57,142.62Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M239.45,131.71v2a6.1,6.1,0,0,0-1.12-.12c-2.81,0-4.41,3.24-4.44,7.65V147h-2.06V132h2.06v3.72c.6-2.42,2.36-4,4.56-4C238.48,131.65,238.88,131.65,239.45,131.71Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M256.38,147h-2.06v-3.17a7,7,0,0,1-6.1,3.51c-4.54,0-7.53-3.18-7.53-7.86s3-7.86,7.53-7.86a7.06,7.06,0,0,1,6.1,3.5v-10h2.06Zm-13.64-7.52c0,3.56,2.24,6,5.66,6a6,6,0,0,0,0-12C245,133.49,242.74,135.94,242.74,139.51Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M279.44,126.09l-.82,1.6a6.91,6.91,0,0,0-2.93-1,3.22,3.22,0,0,0-3.32,3.54V132h4.74v1.66h-4.74V147h-2.06V133.64h-2.54V132h2.54v-2c0-3.17,2.15-5.07,5.23-5.07A8.25,8.25,0,0,1,279.44,126.09Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M294,139.51a7.89,7.89,0,1,1-7.92-7.86A7.9,7.9,0,0,1,294,139.51Zm-13.73,0a5.84,5.84,0,1,0,11.67,0,5.84,5.84,0,1,0-11.67,0Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M305.4,131.71v2a6,6,0,0,0-1.12-.12c-2.81,0-4.41,3.24-4.44,7.65V147h-2.06V132h2.06v3.72c.6-2.42,2.36-4,4.56-4C304.43,131.65,304.83,131.65,305.4,131.71Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M344,138.12V147h-2V144.4a6.52,6.52,0,0,1-5.6,3c-3.56,0-5.92-1.88-5.92-4.72s2.36-4.62,5.89-4.62a12.63,12.63,0,0,1,5.54,1.3V138a4.25,4.25,0,0,0-4.54-4.44,9,9,0,0,0-5,1.6l-.78-1.54a9.36,9.36,0,0,1,5.89-1.93A6.16,6.16,0,0,1,344,138.12Zm-11.49,4.5c0,1.75,1.67,2.93,4.18,2.93a6.58,6.58,0,0,0,5.26-3v-1.78a13.27,13.27,0,0,0-5.35-1.15C334.18,139.63,332.54,140.81,332.54,142.62Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M356.42,131.71v2a6,6,0,0,0-1.12-.12c-2.81,0-4.41,3.24-4.44,7.65V147h-2.05V132h2.05v3.72c.61-2.42,2.36-4,4.57-4C355.46,131.65,355.85,131.65,356.42,131.71Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M361.5,128.44h-2.33v-2.57h2.33ZM361.35,147h-2.06V132h2.06Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M380,138.69a5.82,5.82,0,0,1-.09,1.12H367.33c.19,3.54,2.39,5.71,5.93,5.71a8,8,0,0,0,4.32-1.18l1,1.42a9.55,9.55,0,0,1-5.32,1.61c-4.93,0-8-3.15-8-7.92s3.05-7.8,7.62-7.8A6.68,6.68,0,0,1,380,138.69Zm-12.54-.48h10.45a4.74,4.74,0,0,0-5-4.72A5.33,5.33,0,0,0,367.46,138.21Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M386.29,132h4.89v1.66h-4.89v8.86c0,2.11,1.11,3,2.69,3a5.69,5.69,0,0,0,2.41-.54l.61,1.6a6.67,6.67,0,0,1-3.11.79,4.34,4.34,0,0,1-4.69-4.57v-9.16h-2.57V132h2.57l.48-4.63h1.61Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M398.62,153.8h-2.09l2.87-6.89L392.87,132h2.36l5.26,12.6,5-12.6h2.39Z" transform="translate(-0.31 -0.48)"></path>
+    <path className="cls-1" d="M323.24,147.06H320.9l-6-15.13h2.18l4.95,13,5-13h2.19Z" transform="translate(-0.31 -0.48)"></path>
+  </svg>
+);
+
+const KukaLogo = ({ className }: { className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 -36 12002 2110" 
+    className={className}
+    aria-label="KUKA Logo"
+  >
+    {/* KUKA Orange: #FF5800 */}
+    <style>{`.kuka-fill{fill:#FF5800;}`}</style>
+    <path className="kuka-fill" d="M10.5,0h4.8v13l8.2-13h6L19.3,13.4l10.2,16.6h-6.2l-7.5-13.1l-0.6,0.9V30h-4.8V0z M45.5,19.8V0h4.8v20.2c0,3.6,1.9,5.5,5.2,5.5c3.4,0,5.2-1.9,5.2-5.5V0h4.8v19.8c0,6.8-4.2,10.2-10,10.2S45.5,26.6,45.5,19.8z M76.8,0h4.8v13l8.2-13h6L85.6,13.4l10.2,16.6h-6.2l-7.5-13.1l-0.6,0.9V30h-4.8V0z M43.1,0L31.5,30h-5.2L38,0H43.1z"/>
+    <path d="m3576 2044c-229-42-408-165-490-337-73-153-70-108-73-949l-4-758h660l3 667c3 653 3 669 24 713 25 53 78 103 131 121 56 20 970 20 1026 0 53-18 106-68 131-121 21-44 21-60 24-713l3-667h660l-4 753c-3 676-5 759-20 817-58 216-198 365-412 438-145 50-180 52-904 51-538-1-692-4-755-15zm-3576-1029v-1015h650v980l293-249c160-137 420-357 577-490l285-241h470c268 0 465 4 460 9-6 5-125 100-266 212-140 112-416 332-612 488l-356 285 41 35c23 20 83 70 134 111 345 281 1063 876 1063 883 1 4-207 7-461 7h-463l-75-66c-41-37-122-107-180-158-58-50-287-250-508-443l-402-352v1019h-650zm6160 0v-1015h660l2 486 3 485 141-118c179-150 517-437 792-671l214-182h465c279 0 462 4 459 9-4 5-104 88-224 183-119 96-394 315-610 488-216 172-389 317-385 321s280 233 613 507c551 456 606 498 617 482 7-10 239-380 516-822s554-885 617-986l115-182h590l201 323c111 177 392 626 624 997 233 371 425 683 428 692 4 17-18 18-370 18h-374l-97-160c-54-88-100-167-103-175-5-13-82-15-603-15h-596l-105 175-105 175h-1663l-573-502c-316-276-577-506-581-512s-8 220-8 502v512h-660zm4623 197c-163-281-329-562-334-562-3 0-77 123-165 273-87 149-167 287-177 305l-19 32h722z" 
+      fill="#ff5c00"
+    />
+    <g fill="#ff6102">
+      <path d="m3587 2046c-57-11-101-26-71-26 23 1 187 30 192 35 8 8-47 4-121-9zm156 7c9-2 25-2 35 0 9 3 1 5-18 5s-27-2-17-5zm1160 0c9-2 25-2 35 0 9 3 1 5-18 5s-27-2-17-5zm59 1c3-3 34-9 69-14 232-34 402-123 498-260 53-75 78-135 102-240 17-79 19-136 19-812 0-498 3-728 10-728 8 0 10 235 7 753-3 676-5 759-20 817-58 216-198 365-412 438-92 32-292 66-273 46zm-4962-1039v-1015h650v490c0 270 3 490 8 490 4 0 20-14 35-30 16-17 34-30 41-30s22-14 35-30c12-17 26-28 32-25 5 4 8 3 7-2-2-4 7-18 20-31 12-12 22-20 22-18s21-16 47-40c25-24 51-40 56-37 6 3 8 2 5-3s3-17 14-26c10-10 18-15 18-11 0 3 8-4 19-15 10-12 24-22 30-22 7 0 9-4 6-10-3-5 1-10 10-10 8 0 18-7 21-15 4-8 10-12 15-9s9-2 9-10c0-9 5-16 10-16 6 0 20-11 32-25 11-13 24-22 29-20 4 3 16-5 26-18s33-32 51-42c17-11 32-25 32-32 0-6 5-15 12-19 7-5 9-2 3 7-4 8 12-6 35-31s38-38 35-30c-4 8 5 2 20-15 14-16 23-24 19-16-5 9-3 12 4 7 7-4 12-13 12-21s5-17 12-21c7-5 9-2 4 7-4 8 2 2 14-14 12-15 26-24 31-21s8 0 7-7c-3-12 1-14 34-18 6 0 8-4 5-8-6-5 15-27 60-63 7-6 17-10 23-10s9-4 5-9c-3-5 13-20 35-34 22-13 37-26 34-29-3-4 4-9 15-13 12-3 21-11 21-16s4-9 9-9 7 8 5 18c-3 9 4 64 15 122s35 186 52 285c18 99 35 184 40 189 4 4 202-148 440-338 239-190 440-346 448-346 19 0 38-16-260 221-140 112-416 332-612 488l-356 285 41 35c23 20 83 70 134 111 348 283 1063 876 1063 883 1 4-209 6-466 5-355-2-467-6-466-15 2-6-6-15-17-18-11-4-20-11-20-17s-2-9-5-6c-6 5-53-33-120-99-24-23-45-40-47-37-3 2-11-7-18-21-7-13-28-31-46-40-19-9-34-18-34-21s5-2 12 2 8 3 4-4-12-12-17-12c-18 0-79-52-79-66 0-8-7-14-16-14s-41-26-72-57c-31-32-52-51-47-43s-7 0-26-19c-18-19-33-39-31-44 1-4-2-6-8-2-5 3-10 1-10-4 0-6-5-11-11-11-10 0-37-22-105-88-19-18-34-30-34-26 0 3-16-10-36-30s-40-36-45-36-21-18-35-40c-15-22-34-40-43-40-18 0-57-40-53-1-5-1-6-5-4-9 6-39-13-41-25-1-5-4-7-6-5-9 5-45-36-39-46 3-6 1-7-5-3s-29-11-50-34c-22-22-42-40-46-40-3 0-6 230-6 510v510h-650zm2680 980c-21-20-705-584-706-582-1 1 18 108 42 237s49 263 55 298l11 62h306c268 0 304-2 292-15zm3480 28c0-5 144-7 320-5l320 3v-1011c0-667 3-1010 10-1010s10 345 10 1015v1015h-330c-181 0-330-3-330-7zm2267-3 452-5-614-505c-337-278-614-509-614-515 0-10 1219-986 1241-994 27-9-17 29-220 191-119 96-394 315-610 488-372 297-392 315-375 330 10 9 289 240 620 514l602 496 363-2 363-3 104-172 104-173 601 2 601 3-595 3-595 2-105 175-105 175-835-2c-708-2-766-3-383-8zm3195 0 366-5-385-615c-212-338-495-790-629-1004s-241-392-239-395c7-6-13-37 275 424 145 231 425 679 623 995s362 583 365 592c4 17-17 18-369 16l-374-3zm-8200-21c-29-12-52-23-49-25 4-4 127 36 127 42 0 8-27 2-78-17zm438-475c-74-16-135-54-163-102-45-76-46-101-47-779 0-417 3-643 9-643 7 0 11 237 13 668 3 618 4 670 21 707 36 80 88 118 190 138 34 7 57 15 52 19-6 3-39-1-75-8zm100 6c0-6 132-10 375-10s375 4 375 10-132 10-375 10-375-4-375-10zm795-6c55-15 97-22 88-13-5 5-31 11-58 14-28 2-41 2-30-1zm-1740-864c0-366 1-515 2-332 2 182 2 482 0 665-1 182-2 33-2-333z"/>
+      <path d="m10070 1265c0-13 375-646 378-637 3 11-360 641-370 642-5 0-8-2-8-5z"/>
+    </g>
+  </svg>
+);
+
+const VWLogo = ({ className }: { className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 192.744 192.744" 
+    className={className}
+    aria-label="Volkswagen Logo"
+  >
+    <g fillRule="evenodd" clipRule="evenodd">
+      <path fill="#fff" d="M0 0h192.744v192.744H0V0z"/>
+      <path fill="currentColor" d="M96.336 2.865c-51.663 0-93.543 41.882-93.543 93.543 0 51.662 41.881 93.543 93.543 93.543 51.66 0 93.543-41.881 93.543-93.543 0-51.66-41.883-93.543-93.543-93.543zm0 178.699c-47.031 0-85.156-38.125-85.156-85.156 0-47.029 38.125-85.155 85.156-85.155 47.029 0 85.156 38.126 85.156 85.155 0 47.031-38.127 85.156-85.156 85.156z"/>
+      <path fill="currentColor" d="M77.692 32.786a66.308 66.308 0 0 1 18.644-2.657c6.465 0 12.715.926 18.623 2.652l-18.623 41.28-18.644-41.275z"/>
+      <path fill="currentColor" d="M131.914 40.477a66.695 66.695 0 0 1 17.957 16.847l-30.566 67.64-11.795-26.227H85.162l-11.794 26.226-30.522-67.702a66.635 66.635 0 0 1 17.909-16.783l24.407 54.146h22.424l24.328-54.147zM32.296 79.254a66.384 66.384 0 0 0-2.241 17.154c0 25.975 14.939 48.458 36.694 59.329L32.296 79.254z"/>
+      <path fill="currentColor" d="M78 160.12a66.268 66.268 0 0 0 18.336 2.569c6.354 0 12.498-.895 18.314-2.562l-18.314-40.673L78 160.12zM125.92 155.737c21.756-10.871 36.695-33.354 36.695-59.329 0-5.88-.766-11.581-2.201-17.009l-34.494 76.338z"/>
+    </g>
+  </svg>
+);
 
 const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [scrolled, setScrolled] = useState(false);
-  // New state for resume modal
   const [showResume, setShowResume] = useState(false);
 
   // Handle scroll effects
@@ -55,11 +176,11 @@ const Portfolio = () => {
   };
 
   const navItems = [
-    { id: 'home', label: 'Home', icon: <Home size={20} /> },
-    { id: 'about', label: 'About', icon: <User size={20} /> },
-    { id: 'experience', label: 'Experience', icon: <History size={20} /> },
-    { id: 'projects', label: 'Work', icon: <Folder size={20} /> },
-    { id: 'contact', label: 'Contact', icon: <Mail size={20} /> },
+    { id: 'home', label: 'Startseite', icon: <Home size={20} /> },
+    { id: 'about', label: 'Über mich', icon: <User size={20} /> },
+    { id: 'experience', label: 'Erfahrung', icon: <History size={20} /> },
+    { id: 'projects', label: 'Projekte', icon: <Folder size={20} /> },
+    { id: 'contact', label: 'Kontakt', icon: <Mail size={20} /> },
   ];
 
   const experiences = [
@@ -68,28 +189,36 @@ const Portfolio = () => {
       role: "Praktikum Kommunikationsplattform",
       period: "09.2025 - Heute",
       description: "Entwicklung und Umsetzung einer internen Kommunikationsplattform. Fokus auf Prozessdigitalisierung, Feedback-Auswertung und Optimierung der internen Kommunikationsstruktur.",
-      tags: ["Interne Kommunikation", "Prozessgestaltung", "Digitalisierung"]
+      tags: ["Interne Kommunikation", "Prozessgestaltung", "Digitalisierung"],
+      icon: <Briefcase size={18} className="text-white" />,
+      bg: "bg-blue-600"
     },
     {
       company: "encoway GmbH",
       role: "Werkstudentin UX/UI Design",
       period: "02.2024 - 04.2025",
       description: "Durchführung von Expert Reviews und Competitor Analysis. Erstellung von Wireframes, Prototypen und UX/UI-Kommunikationsmaterialien. Gestaltung einer SharePoint-Seite für das UX-Team.",
-      tags: ["Expert Reviews", "Prototyping", "SharePoint", "Visual Design"]
+      tags: ["Expert Reviews", "Prototyping", "SharePoint", "Visual Design"],
+      icon: <Palette size={18} className="text-white" />,
+      bg: "bg-emerald-500"
     },
     {
       company: "Siemens AG",
       role: "Werkstudentin UX/UI Design",
       period: "08.2022 - 02.2023",
       description: "Unterstützung bei der Pflege und Optimierung von Archivierungsprozessen. Verwaltung und Digitalisierung von Dokumenten im SAP-System.",
-      tags: ["Prozessoptimierung", "SAP", "Organisation"]
+      tags: ["Prozessoptimierung", "SAP", "Organisation"],
+      icon: <Briefcase size={18} className="text-white" />,
+      bg: "bg-cyan-600"
     },
     {
       company: "KUKA AG",
       role: "Praktikantin im UX Bereich",
       period: "04.2022 - 06.2022",
       description: "Prototyping mit Axure 9 für Robotereinsatz-Handhelds. Recherche zu internationalen Tastaturlayouts und Entwicklung von UX-Patterns.",
-      tags: ["Axure 9", "HMI Design", "User Research", "UX Patterns"]
+      tags: ["Axure 9", "HMI Design", "User Research", "UX Patterns"],
+      icon: <Layout size={18} className="text-white" />,
+      bg: "bg-orange-500"
     }
   ];
 
@@ -99,21 +228,24 @@ const Portfolio = () => {
       category: "Product Design",
       description: "Konzeption und Umsetzung einer zentralen Plattform zur Informationsverteilung für Mitarbeitende.",
       metrics: ["Zentrale Info-Verteilung", "Feedback-Integration"],
-      color: "bg-blue-50"
+      color: "bg-blue-50",
+      Logo: VWLogo
     },
     {
       title: "KUKA Smart Handheld",
       category: "HMI / Industrial UX",
       description: "Optimierung der Benutzeroberfläche für Roboter-Steuerungsgeräte mittels High-Fidelity Prototyping in Axure 9.",
       metrics: ["Axure 9", "Industrial Design", "Accessibility"],
-      color: "bg-orange-50"
+      color: "bg-orange-50",
+      Logo: KukaLogo
     },
     {
       title: "Encoway UX Audit",
       category: "Research & Analysis",
       description: "Umfassende Analyse von Wettbewerber-Websites und Expert Reviews der eigenen Produkte zur Identifikation von UX-Schwachstellen.",
       metrics: ["Competitor Analysis", "Heuristic Eval"],
-      color: "bg-green-50"
+      color: "bg-green-50",
+      Logo: EncowayLogo
     }
   ];
 
@@ -123,19 +255,22 @@ const Portfolio = () => {
     languages: ["Deutsch (C1)", "Englisch (B2)", "Vietnamesisch (Muttersprache)"]
   };
   
-  const resumeUrl = "https://drive.google.com/file/d/1D4BLzlOJM1oRUHO99a-lU9fZ8Fn-37CU/preview"; 
+  const resumeUrl = "https://drive.google.com/file/d/1D4BLzlOJM1oRUHO99a-lU9fZ8Fn-37CU/preview";
+  
+  // NEW IMAGE LINK - Using thumbnail endpoint for better reliability
+  const profileImageUrl = "https://drive.google.com/thumbnail?id=1W6WKCxdxNrwhSHYkAciBdgJ2MsSxF9ZF&sz=w1000"; 
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-200 selection:text-blue-900">
+    <div className="min-h-screen bg-stone-50 text-stone-800 font-sans selection:bg-rose-200 selection:text-rose-900">
       
       {/* Resume Modal Popup */}
       {showResume && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white w-full max-w-5xl h-[85vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden relative animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-stone-900/70 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="bg-white w-full max-w-5xl h-[85vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden relative animate-in zoom-in-95 duration-300 border-4 border-white ring-4 ring-stone-200">
             {/* Modal Header */}
-            <div className="flex justify-between items-center p-4 border-b bg-slate-50">
-              <h3 className="font-bold text-slate-700 flex items-center gap-2">
-                <FileText size={18} className="text-blue-600"/> 
+            <div className="flex justify-between items-center p-4 border-b bg-stone-50">
+              <h3 className="font-bold text-stone-700 flex items-center gap-2">
+                <FileText size={18} className="text-emerald-600"/> 
                 Lebenslauf Vorschau
               </h3>
               <div className="flex items-center gap-3">
@@ -149,9 +284,9 @@ const Portfolio = () => {
                 </a>
                 <button 
                   onClick={() => setShowResume(false)}
-                  className="p-2 hover:bg-slate-200 rounded-full transition-colors"
+                  className="p-2 hover:bg-stone-200 rounded-full transition-colors"
                 >
-                  <X size={20} className="text-slate-500" />
+                  <X size={20} className="text-stone-500" />
                 </button>
               </div>
             </div>
@@ -169,263 +304,213 @@ const Portfolio = () => {
         </div>
       )}
 
-      {/* Navigation */}
-      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'py-4' : 'py-6'}`}>
-        <div className="container mx-auto px-6 flex justify-center items-center relative">
-          
-          {/* Logo (Left Side) */}
-          <div className="absolute left-6 md:left-12 top-1/2 transform -translate-y-1/2 cursor-pointer" onClick={() => scrollTo('home')}>
-             <span className="text-2xl font-bold tracking-tighter text-slate-900">PMN<span className="text-blue-600">.</span></span>
-          </div>
-
-          {/* Desktop Menu */}
-          <div className="hidden md:flex bg-slate-900 rounded-full p-1.5 shadow-2xl border border-slate-800 gap-1">
-            {navItems.map((item) => {
-              const isActive = activeSection === item.id;
-              return (
-                <button 
-                  key={item.id}
-                  onClick={() => scrollTo(item.id)}
-                  className={`
-                    group flex items-center rounded-full p-2.5 transition-all duration-300 ease-in-out
-                    ${isActive ? 'bg-white text-slate-900' : 'text-slate-400 hover:text-slate-900 hover:bg-white'}
-                  `}
-                >
-                  <span className="relative z-10">
-                    {item.icon}
-                  </span>
-                  <span className={`
-                    overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out font-medium text-sm
-                    ${isActive ? 'max-w-[100px] opacity-100 ml-2' : 'max-w-0 opacity-0 group-hover:max-w-[100px] group-hover:opacity-100 group-hover:ml-2'}
-                  `}>
-                    {item.label}
-                  </span>
-                </button>
-              );
-            })}
+      {/* Navigation - Floating & Modern */}
+      <nav className={`fixed top-6 left-0 right-0 z-50 flex justify-center px-4 transition-all duration-500 ${scrolled ? 'transform -translate-y-2' : ''}`}>
+        <div className="bg-white/80 backdrop-blur-xl border border-white/50 shadow-lg shadow-stone-200/50 rounded-full px-2 py-2 flex items-center gap-1 md:gap-2 max-w-fit mx-auto">
+          <div className="px-4 font-bold text-emerald-700 flex items-center gap-2 cursor-pointer mr-2" onClick={() => scrollTo('home')}>
+            <LotusIcon className="w-5 h-5 text-rose-500" />
+            <span className="hidden md:inline">PMN.</span>
           </div>
           
-          {/* CV Download Button */}
-          <a
-            href={resumeUrl}
-            download="Phan_My_Anh_Nguyen_CV.pdf"
-            className="absolute right-6 md:right-12 top-1/2 transform -translate-y-1/2 hidden md:flex items-center px-5 py-2.5 bg-white rounded-full shadow-lg border border-slate-100 text-sm font-medium text-slate-700 hover:shadow-xl hover:text-blue-600 hover:border-blue-100 transition-all active:scale-95"
-          >
-            <FileText size={16} className="mr-2" />
-            Resume
-          </a>
-
-          {/* Mobile Menu Toggle */}
-          <button className="md:hidden absolute right-6 top-1/2 transform -translate-y-1/2 p-3 bg-white rounded-full shadow-lg border" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X size={24} className="text-slate-800" /> : <Menu size={24} className="text-slate-800" />}
-          </button>
-        </div>
-
-        {/* Mobile Menu Dropdown */}
-        {isMenuOpen && (
-          <div className="absolute top-full left-0 w-full bg-white shadow-lg py-4 md:hidden flex flex-col items-center space-y-4 border-t animate-in slide-in-from-top-5">
+          <div className="hidden md:flex items-center gap-1 bg-stone-100/50 rounded-full p-1">
             {navItems.map((item) => (
               <button 
                 key={item.id}
                 onClick={() => scrollTo(item.id)}
-                className="text-slate-600 font-medium py-2 hover:text-blue-600 flex items-center gap-2"
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${activeSection === item.id.toLowerCase() ? 'bg-white text-emerald-700 shadow-sm' : 'text-stone-500 hover:text-stone-900'}`}
               >
-                {item.icon} {item.label}
+                {item.label}
               </button>
             ))}
-            <a 
-              href={resumeUrl}
-              download="Phan_My_Anh_Nguyen_CV.pdf"
-              className="px-4 py-2 bg-blue-600 text-white rounded-full font-medium flex items-center gap-2 hover:bg-blue-700 transition-colors"
-            >
-              <Download size={16} /> CV Herunterladen
-            </a>
           </div>
+
+          <div className="flex items-center gap-2 ml-2 pl-2 border-l border-stone-200">
+            <a href="https://www.linkedin.com/in/myanh02/" target="_blank" rel="noopener noreferrer" className="p-2.5 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100 transition-colors hover:scale-110 transform duration-200">
+              <Linkedin size={18} />
+            </a>
+            <button className="md:hidden p-2.5 bg-stone-100 rounded-full" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+           <div className="absolute top-full mt-4 bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl p-4 w-[90vw] flex flex-col gap-2 border border-stone-100 animate-in slide-in-from-top-5">
+             {navItems.map((item) => (
+               <button key={item.id} onClick={() => scrollTo(item.id)} className="py-3 px-4 text-left text-stone-600 font-medium hover:bg-emerald-50 hover:text-emerald-700 rounded-xl transition-colors">
+                 {item.label}
+               </button>
+             ))}
+           </div>
         )}
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="relative pt-32 pb-20 md:pt-48 md:pb-32 px-6 overflow-hidden">
-        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-72 h-72 bg-purple-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+      <section id="home" className="relative pt-40 pb-20 px-6 overflow-hidden min-h-screen flex items-center">
+        {/* Decorative Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div className="absolute top-[10%] right-[5%] w-[500px] h-[500px] bg-rose-100/50 rounded-full blur-3xl opacity-60 mix-blend-multiply animate-pulse" style={{animationDuration: '8s'}}></div>
+            <div className="absolute bottom-[10%] left-[10%] w-[400px] h-[400px] bg-emerald-100/50 rounded-full blur-3xl opacity-60 mix-blend-multiply animate-pulse" style={{animationDuration: '10s'}}></div>
+            <div className="absolute top-[40%] left-[50%] w-[300px] h-[300px] bg-amber-100/50 rounded-full blur-3xl opacity-60 mix-blend-multiply animate-pulse" style={{animationDuration: '12s'}}></div>
+        </div>
 
-        <div className="container mx-auto max-w-6xl">
-          <div className="flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20">
-            {/* Text Content - Left Side */}
-            <div className="flex-1 space-y-6 text-center md:text-left">
-              <h1 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight leading-tight">
-                Hi, ich bin <br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                  Phan My Anh Nguyen
+        <div className="container mx-auto max-w-6xl relative z-10">
+          <div className="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-24">
+            
+            {/* Content */}
+            <div className="flex-1 text-center lg:text-left space-y-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-stone-200 rounded-full shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
-              </h1>
-              <p className="text-xl md:text-2xl text-slate-500 max-w-2xl leading-relaxed">
-                UI/UX Designerin mit Fokus auf nutzerzentrierte Lösungen, sauberes Design und effiziente Prozesse.
+                <span className="text-xs font-bold tracking-wider text-stone-500 uppercase">Offen für neue Möglichkeiten</span>
+              </div>
+
+              <div className="space-y-4">
+                <h2 className="text-3xl md:text-5xl font-serif text-stone-400 font-light italic animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-100">
+                  Xin chào, ich bin
+                </h2>
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-stone-800 tracking-tight animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+                  Phan My <br/>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">Anh Nguyen</span>
+                </h1>
+              </div>
+
+              <p className="text-lg md:text-xl text-stone-500 max-w-2xl mx-auto lg:mx-0 leading-relaxed animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300">
+                Eine <b>UI/UX-Designerin</b>, die Kunst mit Logik verbindet. Ich gestalte intuitive digitale Erlebnisse mit Begeisterung und einem Blick fürs Detail.
               </p>
-              
-              <div className="flex flex-wrap gap-4 pt-8 justify-center md:justify-start">
-                <button 
-                  onClick={() => scrollTo('projects')}
-                  className="px-8 py-4 bg-slate-900 text-white rounded-full font-medium hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
-                >
-                  Meine Arbeiten ansehen <ChevronRight size={18} />
+
+              <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-500">
+                <button onClick={() => scrollTo('projects')} className="group relative px-8 py-4 bg-stone-900 text-white rounded-full font-medium overflow-hidden shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                  <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-emerald-500 to-emerald-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <span className="relative flex items-center gap-2">Projekte ansehen <ChevronRight size={18} /></span>
                 </button>
-                {/* Replaced CV button with LinkedIn button */}
-                <a 
-                  href="https://www.linkedin.com/in/myanh02/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-8 py-4 bg-white border border-slate-200 text-slate-700 rounded-full font-medium hover:border-slate-400 transition-all flex items-center gap-2"
-                >
-                  LinkedIn <Linkedin size={18} />
-                </a>
+                
+                <button onClick={toggleResume} className="px-8 py-4 bg-white border border-stone-200 text-stone-700 rounded-full font-medium hover:border-rose-300 hover:text-rose-600 hover:bg-rose-50 transition-all flex items-center gap-2 shadow-sm hover:shadow-md">
+                  Lebenslauf <Eye size={18} />
+                </button>
               </div>
             </div>
 
-            {/* Image - Right Side */}
-            <div className="flex-1 relative w-full max-w-md md:max-w-lg">
-               {/* Decorative Elements behind image */}
-               <div className="absolute top-10 right-10 w-full h-full bg-blue-100 rounded-3xl transform rotate-6 z-0"></div>
-               <div className="absolute -bottom-5 -left-5 w-24 h-24 bg-purple-100 rounded-full blur-xl z-0"></div>
-               
-               {/* Profile Image */}
-               <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-                  <img 
-                    src={profileImage} 
-                    alt="Phan My Anh Nguyen" 
-                    className="w-full h-auto object-cover"
-                  />
+            {/* Image Frame - "Modern Altar" Style */}
+            <div className="flex-1 relative w-full max-w-md lg:max-w-lg animate-in fade-in zoom-in duration-1000 delay-300">
+               <div className="relative aspect-[4/5] mx-auto">
+                  {/* Abstract Shapes */}
+                  <div className="absolute top-[-20px] right-[-20px] w-24 h-24 bg-rose-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+                  <div className="absolute bottom-[-10px] left-[-10px] w-32 h-32 bg-emerald-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-700"></div>
+                  
+                  {/* Main Frame */}
+                  <div className="absolute inset-0 bg-stone-200 rounded-[3rem] transform rotate-3"></div>
+                  <div className="absolute inset-0 bg-white rounded-[3rem] border-4 border-white shadow-2xl overflow-hidden transform -rotate-2 transition-transform duration-500 hover:rotate-0">
+                    <img src={profileImageUrl} alt="Phan My Anh Nguyen" className="w-full h-full object-cover" />
+                    
+                    {/* Overlay Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/20 to-transparent mix-blend-overlay"></div>
+                  </div>
                </div>
             </div>
-          </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 border-t pt-10 border-slate-200">
-            <div>
-              <div className="text-3xl font-bold text-slate-900">3+</div>
-              <div className="text-sm text-slate-500 mt-1">Jahre Erfahrung</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-slate-900">10+</div>
-              <div className="text-sm text-slate-500 mt-1">Tools gemeistert</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-slate-900">B.A.</div>
-              <div className="text-sm text-slate-500 mt-1">Medieninformatik</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-slate-900">3</div>
-              <div className="text-sm text-slate-500 mt-1">Sprachen</div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* About & Skills Section */}
-      <section id="about" className="py-20 bg-white">
-        <div className="container mx-auto px-6 max-w-5xl">
-          <div className="grid md:grid-cols-2 gap-16 items-start">
-            <div>
-              <h2 className="text-sm font-bold text-blue-600 tracking-wider uppercase mb-2">Über Mich</h2>
-              <h3 className="text-3xl font-bold text-slate-900 mb-6">Design meets Logic</h3>
-              <p className="text-slate-600 leading-relaxed mb-6">
-                Mit einem Hintergrund in Medieninformatik und Wirtschaftswissenschaften verbinde ich kreatives Design mit technischem Verständnis. Ich liebe es, komplexe Probleme in intuitive Interfaces zu verwandeln.
-              </p>
-              <p className="text-slate-600 leading-relaxed mb-8">
-                Meine Leidenschaft erstreckt sich über das Erstellen von Wireframes und Prototypen bis hin zur Content-Erstellung für soziale Medien. Wenn ich nicht designe, fotografiere ich gerne oder erstelle Videos.
-              </p>
-              
-              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                <h4 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                  <GraduationCap size={20} className="text-blue-600"/> Ausbildung
-                </h4>
-                <div>
-                  <div className="font-medium text-slate-900">Bachelor of Arts, Medieninformatik</div>
-                  <div className="text-sm text-slate-500">Universität Regensburg | GPA: 2.0</div>
-                  <div className="text-sm text-slate-400 mt-1">Nebenfächer: Volkswirtschaftslehre, Medienwissenschaft</div>
-                </div>
-              </div>
-              
-              {/* Profile Picture Section Removed */}
-            </div>
-
-            <div>
-              <h2 className="text-sm font-bold text-blue-600 tracking-wider uppercase mb-6">Tech Stack & Skills</h2>
-              
-              <div className="space-y-8">
-                <div>
-                  <h4 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
-                    <Palette size={18} /> Design
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {skills.design.map(skill => (
-                      <span key={skill} className="px-3 py-1 bg-white border border-slate-200 rounded-lg text-sm text-slate-600">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
-                    <Layout size={18} /> Tools
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {skills.tools.map(skill => (
-                      <span key={skill} className="px-3 py-1 bg-white border border-slate-200 rounded-lg text-sm text-slate-600">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
-                    <Users size={18} /> Sprachen
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {skills.languages.map(skill => (
-                      <span key={skill} className="px-3 py-1 bg-emerald-50 border border-emerald-100 text-emerald-700 rounded-lg text-sm">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Experience Section */}
-      <section id="experience" className="py-20 bg-slate-50">
-        <div className="container mx-auto px-6 max-w-4xl">
+      {/* Skills Section - "The Toolkit" */}
+      <section id="about" className="py-24 relative">
+        <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-sm font-bold text-blue-600 tracking-wider uppercase mb-2">Werdegang</h2>
-            <h3 className="text-3xl font-bold text-slate-900">Berufserfahrung</h3>
+            <h2 className="text-sm font-bold text-emerald-600 tracking-widest uppercase mb-3">Meine Expertise</h2>
+            <h3 className="text-4xl font-serif text-stone-800">Design & Entwicklung</h3>
           </div>
 
-          <div className="space-y-8">
-            {experiences.map((exp, index) => (
-              <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
-                <div className="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-2">
-                  <div>
-                    <h4 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{exp.role}</h4>
-                    <p className="text-slate-600 font-medium">{exp.company}</p>
-                  </div>
-                  <span className="px-4 py-1 bg-slate-100 text-slate-600 rounded-full text-sm font-medium whitespace-nowrap self-start md:self-auto">
-                    {exp.period}
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Design Card */}
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-stone-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+              <div className="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Palette className="text-rose-500" size={28} />
+              </div>
+              <h4 className="text-xl font-bold text-stone-800 mb-4">Design</h4>
+              <div className="flex flex-wrap gap-2">
+                {skills.design.map(skill => (
+                  <span key={skill} className="px-3 py-1.5 bg-stone-50 text-stone-600 text-sm rounded-lg border border-stone-100">
+                    {skill}
                   </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Tools Card */}
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-stone-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+              <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Layout className="text-blue-500" size={28} />
+              </div>
+              <h4 className="text-xl font-bold text-stone-800 mb-4">Tools</h4>
+              <div className="flex flex-wrap gap-2">
+                {skills.tools.map(skill => (
+                  <span key={skill} className="px-3 py-1.5 bg-stone-50 text-stone-600 text-sm rounded-lg border border-stone-100">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Languages Card */}
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-stone-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+              <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Users className="text-emerald-500" size={28} />
+              </div>
+              <h4 className="text-xl font-bold text-stone-800 mb-4">Sprachen</h4>
+              <div className="space-y-3">
+                 {skills.languages.map((skill, i) => (
+                   <div key={i} className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                      <span className="text-stone-600 font-medium">{skill}</span>
+                   </div>
+                 ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Experience Section - "Timeline Journey" */}
+      <section id="experience" className="py-24 bg-white">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <div className="flex items-center gap-4 mb-16">
+            <div className="h-px flex-1 bg-stone-200"></div>
+            <h2 className="text-3xl font-serif text-stone-800">Mein Werdegang</h2>
+            <div className="h-px flex-1 bg-stone-200"></div>
+          </div>
+
+          <div className="relative space-y-12 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-stone-200 before:to-transparent">
+            {experiences.map((exp, index) => (
+              <div key={index} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                
+                {/* Icon Dot */}
+                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-4 border-white shadow-lg shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 ${exp.bg}`}>
+                  {exp.icon}
                 </div>
-                <p className="text-slate-600 mb-6 leading-relaxed">
-                  {exp.description}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {exp.tags.map(tag => (
-                    <span key={tag} className="text-xs font-medium text-slate-500 px-2 py-1 bg-slate-50 rounded border border-slate-100">
-                      #{tag}
-                    </span>
-                  ))}
+                
+                {/* Content Card */}
+                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-stone-50 p-6 rounded-2xl border border-stone-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative">
+                  {/* Arrow */}
+                  <div className="absolute top-4 -left-2 w-4 h-4 bg-stone-50 rotate-45 border-l border-b border-stone-100 md:hidden"></div>
+                  <div className="hidden md:block absolute top-3 w-4 h-4 bg-stone-50 rotate-45 border-t border-l border-stone-100 group-odd:-right-2 group-odd:rotate-[135deg] group-even:-left-2 group-even:-rotate-45"></div>
+
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-2">
+                    <h4 className="font-bold text-stone-800">{exp.company}</h4>
+                    <span className="text-xs font-bold px-2 py-1 bg-white rounded-md text-stone-500 shadow-sm border border-stone-100">{exp.period}</span>
+                  </div>
+                  <div className="text-emerald-600 font-medium text-sm mb-3">{exp.role}</div>
+                  <p className="text-stone-600 text-sm leading-relaxed mb-4">{exp.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {exp.tags.map(tag => (
+                      <span key={tag} className="text-xs text-stone-500 bg-white px-2 py-1 rounded border border-stone-200">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
@@ -433,91 +518,86 @@ const Portfolio = () => {
         </div>
       </section>
 
-      {/* Projects / Selected Work */}
-      <section id="projects" className="py-20 bg-white">
+      {/* Projects Section - Masonry-ish */}
+      <section id="projects" className="py-24 bg-stone-50">
         <div className="container mx-auto px-6 max-w-6xl">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-            <div>
-              <h2 className="text-sm font-bold text-blue-600 tracking-wider uppercase mb-2">Portfolio</h2>
-              <h3 className="text-3xl font-bold text-slate-900">Ausgewählte Projekte</h3>
-            </div>
-            <p className="text-slate-500 max-w-md text-right hidden md:block">
-              Ein Einblick in meine Arbeit als UX/UI Designerin bei verschiedenen Unternehmen.
-            </p>
-          </div>
+           <div className="flex justify-between items-end mb-12">
+             <div>
+               <h2 className="text-sm font-bold text-emerald-600 tracking-widest uppercase mb-3">Ausgewählte Arbeiten</h2>
+               <h3 className="text-4xl font-serif text-stone-800">Aktuelle Projekte</h3>
+             </div>
+             <div className="hidden md:block">
+                <Sparkles className="text-emerald-300 w-12 h-12" />
+             </div>
+           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
-              <div key={index} className="group relative bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 hover:shadow-xl transition-all duration-300 flex flex-col h-full">
-                <div className={`h-48 w-full ${project.color} flex items-center justify-center overflow-hidden relative`}>
-                  <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#475569_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                  
-                  {/* Logo Switching Logic */}
-                  {project.title === "Volkswagen Internal Hub" && (
-                    <VWLogo className="w-32 h-32 transform group-hover:scale-110 transition-transform duration-500 opacity-80 mix-blend-multiply" />
-                  )}
-                  {project.title === "KUKA Smart Handheld" && (
-                    <KukaLogo className="w-40 h-auto transform group-hover:scale-110 transition-transform duration-500 opacity-80 mix-blend-multiply" />
-                  )}
-                  {project.title === "Encoway UX Audit" && (
-                    <EncowayLogo className="w-32 h-32 transform group-hover:scale-110 transition-transform duration-500 opacity-50 mix-blend-multiply" />
-                  )}
-                </div>
+           <div className="grid md:grid-cols-3 gap-8">
+              {projects.map((project, index) => (
+                <div key={index} className={`group relative bg-white rounded-3xl overflow-hidden border hover:shadow-2xl transition-all duration-500 flex flex-col ${project.color}`}>
+                  {/* Image Area with Logo */}
+                  <div className="relative h-64 overflow-hidden flex items-center justify-center p-10">
+                    <div className="w-full h-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-700 ease-out">
+                       {project.Logo && <project.Logo className="w-full h-full max-w-[180px] opacity-80 mix-blend-multiply" />}
+                    </div>
+                  </div>
 
-                <div className="p-8 flex-1 flex flex-col">
-                  <div className="text-xs font-bold text-blue-600 mb-2 uppercase tracking-wide">{project.category}</div>
-                  <h4 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">{project.title}</h4>
-                  <p className="text-slate-600 mb-6 text-sm leading-relaxed flex-1">
-                    {project.description}
-                  </p>
-                  
-                  <div className="border-t border-slate-200 pt-4 mt-auto">
-                    <div className="flex flex-wrap gap-2">
+                  <div className="p-8 flex-1 flex flex-col bg-white relative z-20">
+                    <div className="text-xs font-bold text-emerald-600 mb-2 uppercase tracking-wider">{project.category}</div>
+                    <h4 className="text-2xl font-bold text-stone-800 mb-3 group-hover:text-emerald-700 transition-colors">{project.title}</h4>
+                    <p className="text-stone-500 text-sm leading-relaxed mb-6 line-clamp-3">
+                      {project.description}
+                    </p>
+                    
+                    <div className="mt-auto pt-6 border-t border-stone-100 flex flex-wrap gap-2">
                       {project.metrics.map((m, i) => (
-                        <span key={i} className="text-xs text-slate-500 bg-white px-2 py-1 rounded border border-slate-100">
+                        <span key={i} className="text-xs font-medium text-stone-500 bg-stone-50 px-3 py-1 rounded-full">
                           {m}
                         </span>
                       ))}
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-20 bg-slate-900 text-white">
-        <div className="container mx-auto px-6 max-w-4xl text-center">
-          <h2 className="text-sm font-bold text-blue-400 tracking-wider uppercase mb-2">Kontakt</h2>
-          <h3 className="text-4xl font-bold mb-8">Lass uns zusammenarbeiten</h3>
-          <p className="text-slate-400 mb-12 max-w-2xl mx-auto">
-            Ich bin immer offen für neue Herausforderungen und spannende Projekte im Bereich UX/UI Design.
+      {/* Contact Footer */}
+      <section id="contact" className="py-24 bg-stone-900 text-stone-300 overflow-hidden relative">
+        {/* Decorative BG */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
+           <div className="absolute -top-24 -right-24 w-96 h-96 bg-emerald-500 rounded-full blur-3xl"></div>
+           <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-rose-500 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="container mx-auto px-6 max-w-4xl text-center relative z-10">
+          <LotusIcon className="w-12 h-12 mx-auto mb-6 text-stone-500" />
+          <h2 className="text-4xl md:text-5xl font-serif text-white mb-8">Bereit, etwas Großartiges zu erschaffen?</h2>
+          <p className="text-lg text-stone-400 mb-12 max-w-2xl mx-auto">
+            Ich bin immer auf der Suche nach neuen Herausforderungen und Möglichkeiten, meine Leidenschaft für Design und Präzision einzubringen.
           </p>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <a href="mailto:nguyenphanmyanh@gmail.com" className="bg-slate-800 p-6 rounded-xl hover:bg-slate-700 transition-colors group">
-              <Mail className="mx-auto mb-4 text-blue-400 group-hover:scale-110 transition-transform" size={32} />
-              <div className="font-medium text-slate-200">Email</div>
-              <div className="text-sm text-slate-500 mt-1">nguyenphanmyanh@gmail.com</div>
+          {/* UPDATED: Increased max-width to max-w-5xl to give buttons more room */}
+          <div className="grid sm:grid-cols-3 gap-4 max-w-5xl mx-auto mb-16">
+            {/* MODIFIED: Email Link shows actual email, smaller text on mobile */}
+            <a href="mailto:nguyenphanmyanh@gmail.com" className="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors group">
+              <Mail className="text-emerald-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <span className="text-xs md:text-sm font-medium text-white">nguyenphanmyanh@gmail.com</span>
             </a>
-            {/* Phone Removed */}
-            <div className="bg-slate-800 p-6 rounded-xl hover:bg-slate-700 transition-colors group">
-              <MapPin className="mx-auto mb-4 text-blue-400 group-hover:scale-110 transition-transform" size={32} />
-              <div className="font-medium text-slate-200">Standort</div>
-              <div className="text-sm text-slate-500 mt-1">Frankfurt am Main</div>
+            {/* MODIFIED: LinkedIn Link shows username */}
+            <a href="https://www.linkedin.com/in/myanh02/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors group">
+              <Linkedin className="text-blue-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <span className="text-xs md:text-sm font-medium text-white">@myanh02</span>
+            </a>
+            <div className="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/10 rounded-2xl group">
+              <MapPin className="text-rose-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <span className="text-xs md:text-sm font-medium text-white">Frankfurt, DE</span>
             </div>
-            <a href="https://www.linkedin.com/in/myanh02/" target="_blank" rel="noopener noreferrer" className="bg-slate-800 p-6 rounded-xl hover:bg-slate-700 transition-colors group">
-              <Linkedin className="mx-auto mb-4 text-blue-400 group-hover:scale-110 transition-transform" size={32} />
-              <div className="font-medium text-slate-200">LinkedIn</div>
-              <div className="text-sm text-slate-500 mt-1">@myanh02</div>
-            </a>
           </div>
 
-          <footer className="text-slate-600 text-sm pt-8 border-t border-slate-800">
-            <p>© 2025 Phan My Anh Nguyen. Alle Rechte vorbehalten.</p>
-          </footer>
+          <div className="text-sm text-stone-600 border-t border-white/10 pt-8">
+            <p>© 2025 Phan My Anh Nguyen. Erstellt mit <Heart size={12} className="inline text-rose-500 mx-1 fill-rose-500" /> und Code.</p>
+          </div>
         </div>
       </section>
     </div>
