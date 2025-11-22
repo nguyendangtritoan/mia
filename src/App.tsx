@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Mail, Phone, MapPin, Download, Palette, Layout, Users, Code, Briefcase, GraduationCap, ChevronRight, FileText, User, Home, Folder, History } from 'lucide-react';
+import { Menu, X, Mail, Phone, MapPin, Download, Palette, Layout, Users, Code, Briefcase, GraduationCap, ChevronRight, FileText, User, Home, Folder, History, Linkedin } from 'lucide-react';
 import EncowayLogo from './EncowayLogo';
 import KukaLogo from './KukaLogo';
 import VWLogo from './VWLogo';
+import profileImage from './assets/profile.jpg'; 
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [scrolled, setScrolled] = useState(false);
 
+  // Handle scroll effects
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -198,35 +200,54 @@ const App = () => {
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-72 h-72 bg-purple-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
 
-        <div className="container mx-auto max-w-5xl">
-          <div className="space-y-6">
-            <span className="inline-block py-1 px-3 rounded-full bg-blue-50 text-blue-600 text-sm font-semibold tracking-wide mb-4 animate-fade-in">
-              PORTFOLIO 2025
-            </span>
-            <h1 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight leading-tight">
-              Hi, ich bin <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                Phan My Anh Nguyen
+        <div className="container mx-auto max-w-6xl">
+          <div className="flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20">
+            {/* Text Content - Left Side */}
+            <div className="flex-1 space-y-6 text-center md:text-left">
+              <span className="inline-block py-1 px-3 rounded-full bg-blue-50 text-blue-600 text-sm font-semibold tracking-wide mb-4 animate-fade-in">
+                PORTFOLIO 2025
               </span>
-            </h1>
-            <p className="text-xl md:text-2xl text-slate-500 max-w-2xl leading-relaxed">
-              UI/UX Designerin mit Fokus auf nutzerzentrierte Lösungen, sauberes Design und effiziente Prozesse.
-            </p>
-            
-            <div className="flex flex-wrap gap-4 pt-8">
-              <button 
-                onClick={() => scrollTo('projects')}
-                className="px-8 py-4 bg-slate-900 text-white rounded-full font-medium hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
-              >
-                Meine Arbeiten ansehen <ChevronRight size={18} />
-              </button>
-              <a 
-                href={resumeUrl}
-                download="Phan_My_Anh_Nguyen_CV.pdf"
-                className="px-8 py-4 bg-white border border-slate-200 text-slate-700 rounded-full font-medium hover:border-slate-400 transition-all flex items-center gap-2"
-              >
-                CV Herunterladen <Download size={18} />
-              </a>
+              <h1 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight leading-tight">
+                Hi, ich bin <br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                  Phan My Anh Nguyen
+                </span>
+              </h1>
+              <p className="text-xl md:text-2xl text-slate-500 max-w-2xl leading-relaxed">
+                UI/UX Designerin mit Fokus auf nutzerzentrierte Lösungen, sauberes Design und effiziente Prozesse.
+              </p>
+              
+              <div className="flex flex-wrap gap-4 pt-8 justify-center md:justify-start">
+                <button 
+                  onClick={() => scrollTo('projects')}
+                  className="px-8 py-4 bg-slate-900 text-white rounded-full font-medium hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+                >
+                  Meine Arbeiten ansehen <ChevronRight size={18} />
+                </button>
+                <a 
+                  href={resumeUrl}
+                  download="Phan_My_Anh_Nguyen_CV.pdf"
+                  className="px-8 py-4 bg-white border border-slate-200 text-slate-700 rounded-full font-medium hover:border-slate-400 transition-all flex items-center gap-2"
+                >
+                  CV Herunterladen <Download size={18} />
+                </a>
+              </div>
+            </div>
+
+            {/* Image - Right Side */}
+            <div className="flex-1 relative w-full max-w-md md:max-w-lg">
+               {/* Decorative Elements behind image */}
+               <div className="absolute top-10 right-10 w-full h-full bg-blue-100 rounded-3xl transform rotate-6 z-0"></div>
+               <div className="absolute -bottom-5 -left-5 w-24 h-24 bg-purple-100 rounded-full blur-xl z-0"></div>
+               
+               {/* Profile Image */}
+               <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+                  <img 
+                    src={profileImage} 
+                    alt="Phan My Anh Nguyen" 
+                    className="w-full h-auto object-cover"
+                  />
+               </div>
             </div>
           </div>
 
@@ -275,13 +296,6 @@ const App = () => {
                   <div className="text-sm text-slate-500">Universität Regensburg | GPA: 2.0</div>
                   <div className="text-sm text-slate-400 mt-1">Nebenfächer: Volkswirtschaftslehre, Medienwissenschaft</div>
                 </div>
-              </div>
-              
-              <div className="mt-8">
-                <div className="w-24 h-24 rounded-full bg-blue-100 border-4 border-white shadow-lg flex items-center justify-center">
-                  <User size={48} className="text-blue-500" />
-                </div>
-                <p className="text-sm text-slate-500 mt-2">Phan My Anh Nguyen</p>
               </div>
             </div>
 
@@ -438,16 +452,17 @@ const App = () => {
               <div className="font-medium text-slate-200">Email</div>
               <div className="text-sm text-slate-500 mt-1">nguyenphanmyanh@gmail.com</div>
             </a>
-            <div className="bg-slate-800 p-6 rounded-xl hover:bg-slate-700 transition-colors group">
-              <Phone className="mx-auto mb-4 text-blue-400 group-hover:scale-110 transition-transform" size={32} />
-              <div className="font-medium text-slate-200">Telefon</div>
-              <div className="text-sm text-slate-500 mt-1">+49 1624562672</div>
-            </div>
+            {/* Removed Phone Number Block */}
             <div className="bg-slate-800 p-6 rounded-xl hover:bg-slate-700 transition-colors group">
               <MapPin className="mx-auto mb-4 text-blue-400 group-hover:scale-110 transition-transform" size={32} />
               <div className="font-medium text-slate-200">Standort</div>
               <div className="text-sm text-slate-500 mt-1">Frankfurt am Main</div>
             </div>
+            <a href="https://www.linkedin.com/in/myanh02/" target="_blank" rel="noopener noreferrer" className="bg-slate-800 p-6 rounded-xl hover:bg-slate-700 transition-colors group">
+              <Linkedin className="mx-auto mb-4 text-blue-400 group-hover:scale-110 transition-transform" size={32} />
+              <div className="font-medium text-slate-200">LinkedIn</div>
+              <div className="text-sm text-slate-500 mt-1">@myanh02</div>
+            </a>
           </div>
 
           <footer className="text-slate-600 text-sm pt-8 border-t border-slate-800">
