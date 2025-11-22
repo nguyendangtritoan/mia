@@ -1,82 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Mail, MapPin, Download, Palette, Layout, Users, Briefcase, ChevronRight, ChevronLeft, FileText, User, Home, Folder, History, Linkedin, Eye, Sparkles, Heart, Globe } from 'lucide-react';
 
-// --- TRANSLATIONS DATA ---
-const translationsData = {
-  de: {
-    nav: { 
-      home: 'Startseite', 
-      skills: 'Kenntnisse', 
-      experience: 'Erfahrung', 
-      projects: 'Projekte', 
-      contact: 'Kontakt' 
-    },
-    hero: { 
-      open: 'Offen für neue Möglichkeiten', 
-      hello: 'Xin chào, ich bin', 
-      role_start: 'Eine', 
-      role_end: ', die Kunst mit Logik verbindet. Ich gestalte intuitive digitale Erlebnisse mit Begeisterung und einem Blick fürs Detail.', 
-      btn_projects: 'Projekte ansehen', 
-      btn_resume: 'Lebenslauf' 
-    },
-    skills: { 
-      title: 'Meine Expertise', 
-      subtitle: 'Design & Entwicklung' 
-    },
-    experience: { 
-      title: 'Mein Werdegang' 
-    },
-    projects: { 
-      title: 'Ausgewählte Arbeiten', 
-      subtitle: 'Aktuelle Projekte' 
-    },
-    contact: { 
-      title: 'Bereit, etwas Großartiges zu erschaffen?', 
-      text: 'Ich bin immer auf der Suche nach neuen Herausforderungen und Möglichkeiten, meine Leidenschaft für Design und Präzision einzubringen.', 
-      footer: 'Erstellt mit' 
-    },
-    roles: ["UI/UX-Designerin", "Mediengestalterin"]
-  },
-  en: {
-    nav: { 
-      home: 'Home', 
-      skills: 'Knowledge', 
-      experience: 'Experience', 
-      projects: 'Projects', 
-      contact: 'Contact' 
-    },
-    hero: { 
-      open: 'Open for new opportunities', 
-      hello: 'Xin chào, I am', 
-      role_start: 'A', 
-      role_end: ', blending art with logic. I craft intuitive digital experiences with enthusiasm and an eye for detail.', 
-      btn_projects: 'View Projects', 
-      btn_resume: 'Resume' 
-    },
-    skills: { 
-      title: 'My Expertise', 
-      subtitle: 'Design & Development' 
-    },
-    experience: { 
-      title: 'My Journey' 
-    },
-    projects: { 
-      title: 'Selected Work', 
-      subtitle: 'Recent Projects' 
-    },
-    contact: { 
-      title: 'Ready to create something amazing?', 
-      text: 'I am always looking for new challenges and opportunities to bring my passion for design and precision.', 
-      footer: 'Built with' 
-    },
-    roles: ["UI/UX Designer", "Media Designer"]
-  }
-};
-
 // --- INLINE LOGO COMPONENTS ---
 
 const EncowayLogo = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 153.32" className={className} aria-label="Encoway Logo">
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 500 153.32" 
+    className={className}
+    aria-label="Encoway Logo"
+  >
     <style>{`.cls-1{fill:#0077c8;}`}</style>
     <path className="cls-1" d="M372.76,30H394.5a8.73,8.73,0,0,1,7.79-7.79V.49A30.43,30.43,0,0,0,372.76,30Z" transform="translate(-0.31 -0.48)"></path>
     <line className="cls-1" x1="402.38" y1="22.11" x2="402.38" y2="22.11"></line>
@@ -188,7 +121,7 @@ const VWLogo = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// --- ROLE TICKER COMPONENT (3D FLIP ANIMATION) ---
+// --- ROLE TICKER COMPONENT (SMOOTH 3D CARD FLIP) ---
 
 const RoleTicker = ({ language }: { language: 'de' | 'en' }) => {
   const roles = {
@@ -202,21 +135,24 @@ const RoleTicker = ({ language }: { language: 'de' | 'en' }) => {
   React.useEffect(() => {
     const interval = setInterval(() => {
       setIsFlipped((prev) => !prev);
-    }, 1500); 
+    }, 2000); 
 
     return () => clearInterval(interval);
   }, []);
 
-  const pillClass = "w-full text-center px-3 py-0.5 bg-emerald-100/50 text-emerald-800 rounded-full text-base md:text-lg border border-emerald-200 font-semibold block truncate leading-none";
+  const pillClass = "w-full text-center px-3 py-0.5 bg-emerald-100/50 text-emerald-800 rounded-full text-base md:text-lg border border-emerald-200 font-semibold block truncate leading-none shadow-md";
 
   return (
     // Container with perspective for 3D effect
     <span className="inline-block h-[1.5em] w-48 relative align-middle mb-1 mx-1" style={{ perspective: '1000px' }}>
       {/* The rotating wrapper */}
       <span
-        // CHANGED: duration-700 to duration-1000 for slower flip
-        className={`absolute inset-0 transition-transform duration-1000 ease-in-out ${isFlipped ? '[transform:rotateX(180deg)]' : '[transform:rotateX(0deg)]'}`}
-        style={{ transformStyle: 'preserve-3d' }}
+        className={`absolute inset-0 transition-transform duration-600 ${isFlipped ? '[transform:rotateX(180deg)]' : '[transform:rotateX(0deg)]'}`}
+        style={{ 
+            transformStyle: 'preserve-3d',
+            // Custom cubic-bezier for a "snap" shuffle feel (starts a bit slow, accelerates, then snaps)
+            transitionTimingFunction: 'cubic-bezier(0.455, 0.03, 0.515, 0.955)' 
+        }}
       >
         {/* Front Face (Role 0) */}
         <span className="absolute inset-0 flex items-center justify-center" style={{ backfaceVisibility: 'hidden' }}>
@@ -507,17 +443,12 @@ const Portfolio = () => {
       <nav className={`fixed top-6 left-0 right-0 z-50 flex justify-center px-4 transition-all duration-500 ${scrolled ? 'transform -translate-y-2' : ''}`}>
         <div className="bg-white/80 backdrop-blur-xl border border-white/50 shadow-lg shadow-stone-200/50 rounded-full px-2 py-2 flex items-center gap-1 md:gap-2 max-w-fit mx-auto">
           
-          {/* LEFT: Language Toggle & Logo */}
+          {/* LEFT: LinkedIn Button & Logo */}
           <div className="flex items-center mr-2">
-               {/* Moved Language Toggle Here */}
-               <button
-                onClick={toggleLanguage}
-                className="p-2 mr-2 font-bold text-emerald-700 flex items-center gap-1 cursor-pointer bg-stone-100/50 hover:bg-stone-200 rounded-full transition-colors"
-                aria-label={`Switch to ${language === 'de' ? 'English' : 'German'}`}
-              >
-                <Globe className="w-4 h-4 text-emerald-600" />
-                <span className="text-xs">{language.toUpperCase()}</span>
-              </button>
+              {/* Moved LinkedIn Here */}
+              <a href="https://www.linkedin.com/in/myanh02/" target="_blank" rel="noopener noreferrer" className="p-2 mr-2 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100 transition-colors hover:scale-110 transform duration-200">
+                <Linkedin size={18} />
+              </a>
 
               <div className="px-2 font-bold text-emerald-700 cursor-pointer" onClick={() => scrollTo('home')}>
                 <span className="hidden md:inline">PMN.</span>
@@ -537,12 +468,18 @@ const Portfolio = () => {
             ))}
           </div>
 
-          {/* RIGHT: LinkedIn Button & Mobile Menu */}
+          {/* RIGHT: Language Toggle & Mobile Menu */}
           <div className="flex items-center gap-2 ml-2 pl-2 border-l border-stone-200">
-            {/* Moved LinkedIn Here */}
-            <a href="https://www.linkedin.com/in/myanh02/" target="_blank" rel="noopener noreferrer" className="p-2.5 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100 transition-colors hover:scale-110 transform duration-200">
-              <Linkedin size={18} />
-            </a>
+            {/* Moved Language Toggle Here */}
+            <button
+                onClick={toggleLanguage}
+                className="p-2 font-bold text-emerald-700 flex items-center gap-1 cursor-pointer bg-stone-100/50 hover:bg-stone-200 rounded-full transition-colors"
+                aria-label={`Switch to ${language === 'de' ? 'English' : 'German'}`}
+              >
+                <Globe className="w-4 h-4 text-emerald-600" />
+                <span className="text-xs">{language.toUpperCase()}</span>
+            </button>
+
             <button className="md:hidden p-2.5 bg-stone-100 rounded-full" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
