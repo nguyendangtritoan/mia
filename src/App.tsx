@@ -1,21 +1,82 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Mail, Phone, MapPin, Download, Palette, Layout, Users, Code, Briefcase, GraduationCap, ChevronRight, FileText, User, Home, Folder, History, Linkedin, Eye, Sparkles, Heart } from 'lucide-react';
+import { Menu, X, Mail, MapPin, Download, Palette, Layout, Users, Briefcase, ChevronRight, ChevronLeft, FileText, User, Home, Folder, History, Linkedin, Eye, Sparkles, Heart, Globe } from 'lucide-react';
+
+// --- TRANSLATIONS DATA ---
+const translationsData = {
+  de: {
+    nav: { 
+      home: 'Startseite', 
+      skills: 'Kenntnisse', 
+      experience: 'Erfahrung', 
+      projects: 'Projekte', 
+      contact: 'Kontakt' 
+    },
+    hero: { 
+      open: 'Offen für neue Möglichkeiten', 
+      hello: 'Xin chào, ich bin', 
+      role_start: 'Eine', 
+      role_end: ', die Kunst mit Logik verbindet. Ich gestalte intuitive digitale Erlebnisse mit Begeisterung und einem Blick fürs Detail.', 
+      btn_projects: 'Projekte ansehen', 
+      btn_resume: 'Lebenslauf' 
+    },
+    skills: { 
+      title: 'Meine Expertise', 
+      subtitle: 'Design & Entwicklung' 
+    },
+    experience: { 
+      title: 'Mein Werdegang' 
+    },
+    projects: { 
+      title: 'Ausgewählte Arbeiten', 
+      subtitle: 'Aktuelle Projekte' 
+    },
+    contact: { 
+      title: 'Bereit, etwas Großartiges zu erschaffen?', 
+      text: 'Ich bin immer auf der Suche nach neuen Herausforderungen und Möglichkeiten, meine Leidenschaft für Design und Präzision einzubringen.', 
+      footer: 'Erstellt mit' 
+    },
+    roles: ["UI/UX-Designerin", "Mediengestalterin"]
+  },
+  en: {
+    nav: { 
+      home: 'Home', 
+      skills: 'Knowledge', 
+      experience: 'Experience', 
+      projects: 'Projects', 
+      contact: 'Contact' 
+    },
+    hero: { 
+      open: 'Open for new opportunities', 
+      hello: 'Xin chào, I am', 
+      role_start: 'A', 
+      role_end: ', blending art with logic. I craft intuitive digital experiences with enthusiasm and an eye for detail.', 
+      btn_projects: 'View Projects', 
+      btn_resume: 'Resume' 
+    },
+    skills: { 
+      title: 'My Expertise', 
+      subtitle: 'Design & Development' 
+    },
+    experience: { 
+      title: 'My Journey' 
+    },
+    projects: { 
+      title: 'Selected Work', 
+      subtitle: 'Recent Projects' 
+    },
+    contact: { 
+      title: 'Ready to create something amazing?', 
+      text: 'I am always looking for new challenges and opportunities to bring my passion for design and precision.', 
+      footer: 'Built with' 
+    },
+    roles: ["UI/UX Designer", "Media Designer"]
+  }
+};
 
 // --- INLINE LOGO COMPONENTS ---
 
-const LotusIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-    <path d="M11.56 2.678c.15-.37.69-.37.84 0 .66 1.61 2.2 4.44 4.6 6.23 2.08 1.55 4.63 1.98 4.63 4.38 0 2.8-2.3 5.2-5.2 5.2-1.56 0-3.22-.74-4.43-1.94-1.21 1.2-2.87 1.94-4.43 1.94-2.9 0-5.2-2.4-5.2-5.2 0-2.4 2.55-2.83 4.63-4.38 2.4-1.79 3.94-4.62 4.6-6.23z" />
-  </svg>
-);
-
 const EncowayLogo = ({ className }: { className?: string }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    viewBox="0 0 500 153.32" 
-    className={className}
-    aria-label="Encoway Logo"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 153.32" className={className} aria-label="Encoway Logo">
     <style>{`.cls-1{fill:#0077c8;}`}</style>
     <path className="cls-1" d="M372.76,30H394.5a8.73,8.73,0,0,1,7.79-7.79V.49A30.43,30.43,0,0,0,372.76,30Z" transform="translate(-0.31 -0.48)"></path>
     <line className="cls-1" x1="402.38" y1="22.11" x2="402.38" y2="22.11"></line>
@@ -127,13 +188,160 @@ const VWLogo = ({ className }: { className?: string }) => (
   </svg>
 );
 
+// --- ROLE TICKER COMPONENT (3D FLIP ANIMATION) ---
+
+const RoleTicker = ({ language }: { language: 'de' | 'en' }) => {
+  const roles = {
+    de: ["UI/UX-Designerin", "Mediengestalterin"],
+    en: ["UI/UX Designer", "Media Designer"]
+  };
+  
+  const currentRoles = roles[language];
+  const [isFlipped, setIsFlipped] = React.useState(false);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setIsFlipped((prev) => !prev);
+    }, 1500); 
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const pillClass = "w-full text-center px-3 py-0.5 bg-emerald-100/50 text-emerald-800 rounded-full text-base md:text-lg border border-emerald-200 font-semibold block truncate leading-none";
+
+  return (
+    // Container with perspective for 3D effect
+    <span className="inline-block h-[1.5em] w-48 relative align-middle mb-1 mx-1" style={{ perspective: '1000px' }}>
+      {/* The rotating wrapper */}
+      <span
+        // CHANGED: duration-700 to duration-1000 for slower flip
+        className={`absolute inset-0 transition-transform duration-1000 ease-in-out ${isFlipped ? '[transform:rotateX(180deg)]' : '[transform:rotateX(0deg)]'}`}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        {/* Front Face (Role 0) */}
+        <span className="absolute inset-0 flex items-center justify-center" style={{ backfaceVisibility: 'hidden' }}>
+          <span className={pillClass}>
+            {currentRoles[0]}
+          </span>
+        </span>
+
+        {/* Back Face (Role 1) - Pre-rotated 180deg */}
+        <span
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ backfaceVisibility: 'hidden', transform: 'rotateX(180deg)' }}
+        >
+          <span className={pillClass}>
+            {currentRoles[1]}
+          </span>
+        </span>
+      </span>
+    </span>
+  );
+};
+
 const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [scrolled, setScrolled] = useState(false);
   const [showResume, setShowResume] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  // FIXED: TypeScript state definition
+  const [language, setLanguage] = useState<'de' | 'en'>('de');
 
-  // Handle scroll effects
+  const toggleLanguage = () => {
+    setLanguage(prevLang => prevLang === 'de' ? 'en' : 'de');
+  };
+
+  const profileImages = [
+    "https://drive.google.com/thumbnail?id=1sKzdkj0WP1g64_gI7TPWbW6rSrY2LICD&sz=w1000",
+    "https://drive.google.com/thumbnail?id=1FA3WBBE3MABiqMfQSOPfc9PgHdx-vw0i&sz=w1000",
+    "https://drive.google.com/thumbnail?id=1oJnhjno7JJJBTjIprHUn1BbyD4WcGnJW&sz=w1000",
+    "https://drive.google.com/thumbnail?id=1uLEKkvzCVwDVaydJcbsEqM-gt2o375xB&sz=w1000",
+    "https://drive.google.com/thumbnail?id=1Sq-lthddelXJK-rrDhTcUyNYOkaWhJvy&sz=w1000"
+  ];
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % profileImages.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + profileImages.length) % profileImages.length);
+  };
+
+  const translationsData = {
+    de: {
+      nav: { 
+        home: 'Startseite', 
+        skills: 'Kenntnisse', 
+        experience: 'Erfahrung', 
+        projects: 'Projekte', 
+        contact: 'Kontakt' 
+      },
+      hero: { 
+        open: 'Offen für neue Möglichkeiten', 
+        hello: 'Xin chào, ich bin', 
+        role_start: 'Eine', 
+        role_end: ', die Kunst mit Logik verbindet. Ich gestalte intuitive digitale Erlebnisse mit Begeisterung und einem Blick fürs Detail.', 
+        btn_projects: 'Projekte ansehen', 
+        btn_resume: 'Lebenslauf' 
+      },
+      skills: { 
+        title: 'Meine Expertise', 
+        subtitle: 'Design & Entwicklung' 
+      },
+      experience: { 
+        title: 'Mein Werdegang' 
+      },
+      projects: { 
+        title: 'Ausgewählte Arbeiten', 
+        subtitle: 'Aktuelle Projekte' 
+      },
+      contact: { 
+        title: 'Bereit, etwas Großartiges zu erschaffen?', 
+        text: 'Ich bin immer auf der Suche nach neuen Herausforderungen und Möglichkeiten, meine Leidenschaft für Design und Präzision einzubringen.', 
+        footer: 'Erstellt mit' 
+      },
+      roles: ["UI/UX-Designerin", "Mediengestalterin"]
+    },
+    en: {
+      nav: { 
+        home: 'Home', 
+        skills: 'Knowledge', 
+        experience: 'Experience', 
+        projects: 'Projects', 
+        contact: 'Contact' 
+      },
+      hero: { 
+        open: 'Open for new opportunities', 
+        hello: 'Xin chào, I am', 
+        role_start: 'A', 
+        role_end: ', blending art with logic. I craft intuitive digital experiences with enthusiasm and an eye for detail.', 
+        btn_projects: 'View Projects', 
+        btn_resume: 'Resume' 
+      },
+      skills: { 
+        title: 'My Expertise', 
+        subtitle: 'Design & Development' 
+      },
+      experience: { 
+        title: 'My Journey' 
+      },
+      projects: { 
+        title: 'Selected Work', 
+        subtitle: 'Recent Projects' 
+      },
+      contact: { 
+        title: 'Ready to create something amazing?', 
+        text: 'I am always looking for new challenges and opportunities to bring my passion for design and precision.', 
+        footer: 'Built with' 
+      },
+      roles: ["UI/UX Designer", "Media Designer"]
+    }
+  };
+
+  const t = translationsData[language];
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -169,18 +377,17 @@ const Portfolio = () => {
     }
   };
 
-  // Toggle Resume Modal
   const toggleResume = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent default download behavior
+    e.preventDefault(); 
     setShowResume(!showResume);
   };
 
   const navItems = [
-    { id: 'home', label: 'Startseite', icon: <Home size={20} /> },
-    { id: 'about', label: 'Über mich', icon: <User size={20} /> },
-    { id: 'experience', label: 'Erfahrung', icon: <History size={20} /> },
-    { id: 'projects', label: 'Projekte', icon: <Folder size={20} /> },
-    { id: 'contact', label: 'Kontakt', icon: <Mail size={20} /> },
+    { id: 'home', label: t.nav.home, icon: <Home size={20} /> },
+    { id: 'about', label: t.nav.skills, icon: <User size={20} /> },
+    { id: 'experience', label: t.nav.experience, icon: <History size={20} /> },
+    { id: 'projects', label: t.nav.projects, icon: <Folder size={20} /> },
+    { id: 'contact', label: t.nav.contact, icon: <Mail size={20} /> },
   ];
 
   const experiences = [
@@ -256,22 +463,17 @@ const Portfolio = () => {
   };
   
   const resumeUrl = "https://drive.google.com/file/d/1D4BLzlOJM1oRUHO99a-lU9fZ8Fn-37CU/preview";
-  
-  // NEW IMAGE LINK - Using thumbnail endpoint for better reliability
-  const profileImageUrl = "https://drive.google.com/thumbnail?id=1W6WKCxdxNrwhSHYkAciBdgJ2MsSxF9ZF&sz=w1000"; 
 
   return (
     <div className="min-h-screen bg-stone-50 text-stone-800 font-sans selection:bg-rose-200 selection:text-rose-900">
       
-      {/* Resume Modal Popup */}
       {showResume && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-stone-900/70 backdrop-blur-md animate-in fade-in duration-300">
           <div className="bg-white w-full max-w-5xl h-[85vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden relative animate-in zoom-in-95 duration-300 border-4 border-white ring-4 ring-stone-200">
-            {/* Modal Header */}
             <div className="flex justify-between items-center p-4 border-b bg-stone-50">
               <h3 className="font-bold text-stone-700 flex items-center gap-2">
                 <FileText size={18} className="text-emerald-600"/> 
-                Lebenslauf Vorschau
+                Letztes Update: 2025
               </h3>
               <div className="flex items-center gap-3">
                 <a 
@@ -290,8 +492,6 @@ const Portfolio = () => {
                 </button>
               </div>
             </div>
-            
-            {/* PDF Viewer (iframe) */}
             <div className="flex-1 bg-slate-100 overflow-hidden relative">
               <iframe 
                 src={resumeUrl} 
@@ -304,14 +504,27 @@ const Portfolio = () => {
         </div>
       )}
 
-      {/* Navigation - Floating & Modern */}
       <nav className={`fixed top-6 left-0 right-0 z-50 flex justify-center px-4 transition-all duration-500 ${scrolled ? 'transform -translate-y-2' : ''}`}>
         <div className="bg-white/80 backdrop-blur-xl border border-white/50 shadow-lg shadow-stone-200/50 rounded-full px-2 py-2 flex items-center gap-1 md:gap-2 max-w-fit mx-auto">
-          <div className="px-4 font-bold text-emerald-700 flex items-center gap-2 cursor-pointer mr-2" onClick={() => scrollTo('home')}>
-            <LotusIcon className="w-5 h-5 text-rose-500" />
-            <span className="hidden md:inline">PMN.</span>
+          
+          {/* LEFT: Language Toggle & Logo */}
+          <div className="flex items-center mr-2">
+               {/* Moved Language Toggle Here */}
+               <button
+                onClick={toggleLanguage}
+                className="p-2 mr-2 font-bold text-emerald-700 flex items-center gap-1 cursor-pointer bg-stone-100/50 hover:bg-stone-200 rounded-full transition-colors"
+                aria-label={`Switch to ${language === 'de' ? 'English' : 'German'}`}
+              >
+                <Globe className="w-4 h-4 text-emerald-600" />
+                <span className="text-xs">{language.toUpperCase()}</span>
+              </button>
+
+              <div className="px-2 font-bold text-emerald-700 cursor-pointer" onClick={() => scrollTo('home')}>
+                <span className="hidden md:inline">PMN.</span>
+              </div>
           </div>
           
+          {/* CENTER: Navigation Items */}
           <div className="hidden md:flex items-center gap-1 bg-stone-100/50 rounded-full p-1">
             {navItems.map((item) => (
               <button 
@@ -324,7 +537,9 @@ const Portfolio = () => {
             ))}
           </div>
 
+          {/* RIGHT: LinkedIn Button & Mobile Menu */}
           <div className="flex items-center gap-2 ml-2 pl-2 border-l border-stone-200">
+            {/* Moved LinkedIn Here */}
             <a href="https://www.linkedin.com/in/myanh02/" target="_blank" rel="noopener noreferrer" className="p-2.5 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100 transition-colors hover:scale-110 transform duration-200">
               <Linkedin size={18} />
             </a>
@@ -334,7 +549,6 @@ const Portfolio = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
            <div className="absolute top-full mt-4 bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl p-4 w-[90vw] flex flex-col gap-2 border border-stone-100 animate-in slide-in-from-top-5">
              {navItems.map((item) => (
@@ -346,9 +560,7 @@ const Portfolio = () => {
         )}
       </nav>
 
-      {/* Hero Section */}
       <section id="home" className="relative pt-40 pb-20 px-6 overflow-hidden min-h-screen flex items-center">
-        {/* Decorative Background Elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
             <div className="absolute top-[10%] right-[5%] w-[500px] h-[500px] bg-rose-100/50 rounded-full blur-3xl opacity-60 mix-blend-multiply animate-pulse" style={{animationDuration: '8s'}}></div>
             <div className="absolute bottom-[10%] left-[10%] w-[400px] h-[400px] bg-emerald-100/50 rounded-full blur-3xl opacity-60 mix-blend-multiply animate-pulse" style={{animationDuration: '10s'}}></div>
@@ -358,19 +570,18 @@ const Portfolio = () => {
         <div className="container mx-auto max-w-6xl relative z-10">
           <div className="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-24">
             
-            {/* Content */}
             <div className="flex-1 text-center lg:text-left space-y-8">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-stone-200 rounded-full shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-700">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
-                <span className="text-xs font-bold tracking-wider text-stone-500 uppercase">Offen für neue Möglichkeiten</span>
+                <span className="text-xs font-bold tracking-wider text-stone-500 uppercase">{t.hero.open}</span>
               </div>
 
               <div className="space-y-4">
                 <h2 className="text-3xl md:text-5xl font-serif text-stone-400 font-light italic animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-100">
-                  Xin chào, ich bin
+                  {t.hero.hello}
                 </h2>
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-stone-800 tracking-tight animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
                   Phan My <br/>
@@ -379,35 +590,53 @@ const Portfolio = () => {
               </div>
 
               <p className="text-lg md:text-xl text-stone-500 max-w-2xl mx-auto lg:mx-0 leading-relaxed animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300">
-                Eine <b>UI/UX-Designerin</b>, die Kunst mit Logik verbindet. Ich gestalte intuitive digitale Erlebnisse mit Begeisterung und einem Blick fürs Detail.
+                {t.hero.role_start} <RoleTicker language={language} /> {t.hero.role_end}
               </p>
 
               <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-500">
                 <button onClick={() => scrollTo('projects')} className="group relative px-8 py-4 bg-stone-900 text-white rounded-full font-medium overflow-hidden shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
                   <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-emerald-500 to-emerald-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <span className="relative flex items-center gap-2">Projekte ansehen <ChevronRight size={18} /></span>
+                  <span className="relative flex items-center gap-2">{t.hero.btn_projects} <ChevronRight size={18} /></span>
                 </button>
                 
                 <button onClick={toggleResume} className="px-8 py-4 bg-white border border-stone-200 text-stone-700 rounded-full font-medium hover:border-rose-300 hover:text-rose-600 hover:bg-rose-50 transition-all flex items-center gap-2 shadow-sm hover:shadow-md">
-                  Lebenslauf <Eye size={18} />
+                  {t.hero.btn_resume} <Eye size={18} />
                 </button>
               </div>
             </div>
 
-            {/* Image Frame - "Modern Altar" Style */}
             <div className="flex-1 relative w-full max-w-md lg:max-w-lg animate-in fade-in zoom-in duration-1000 delay-300">
-               <div className="relative aspect-[4/5] mx-auto">
-                  {/* Abstract Shapes */}
+               <div className="relative aspect-[4/5] mx-auto group">
                   <div className="absolute top-[-20px] right-[-20px] w-24 h-24 bg-rose-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
                   <div className="absolute bottom-[-10px] left-[-10px] w-32 h-32 bg-emerald-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-700"></div>
                   
-                  {/* Main Frame */}
                   <div className="absolute inset-0 bg-stone-200 rounded-[3rem] transform rotate-3"></div>
-                  <div className="absolute inset-0 bg-white rounded-[3rem] border-4 border-white shadow-2xl overflow-hidden transform -rotate-2 transition-transform duration-500 hover:rotate-0">
-                    <img src={profileImageUrl} alt="Phan My Anh Nguyen" className="w-full h-full object-cover" />
-                    
-                    {/* Overlay Gradient */}
+                  <div className="absolute inset-0 bg-white rounded-[3rem] border-4 border-white shadow-2xl overflow-hidden transform -rotate-2 transition-transform duration-500 hover:rotate-0 relative">
+                    <img src={profileImages[currentImageIndex]} alt="Phan My Anh Nguyen" className="w-full h-full object-cover transition-all duration-500" />
                     <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/20 to-transparent mix-blend-overlay"></div>
+
+                    <button 
+                      onClick={prevImage}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full text-white hover:bg-white/40 transition-all opacity-0 group-hover:opacity-100"
+                    >
+                      <ChevronLeft size={24} />
+                    </button>
+                    
+                    <button 
+                      onClick={nextImage}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full text-white hover:bg-white/40 transition-all opacity-0 group-hover:opacity-100"
+                    >
+                      <ChevronRight size={24} />
+                    </button>
+
+                    <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                      {profileImages.map((_, idx) => (
+                        <div 
+                          key={idx} 
+                          className={`w-2 h-2 rounded-full transition-all ${idx === currentImageIndex ? 'bg-white w-4' : 'bg-white/50'}`}
+                        />
+                      ))}
+                    </div>
                   </div>
                </div>
             </div>
@@ -416,16 +645,14 @@ const Portfolio = () => {
         </div>
       </section>
 
-      {/* Skills Section - "The Toolkit" */}
       <section id="about" className="py-24 relative">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-sm font-bold text-emerald-600 tracking-widest uppercase mb-3">Meine Expertise</h2>
-            <h3 className="text-4xl font-serif text-stone-800">Design & Entwicklung</h3>
+            <h2 className="text-sm font-bold text-emerald-600 tracking-widest uppercase mb-3">{t.skills.title}</h2>
+            <h3 className="text-4xl font-serif text-stone-800">{t.skills.subtitle}</h3>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Design Card */}
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-stone-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
               <div className="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Palette className="text-rose-500" size={28} />
@@ -440,7 +667,6 @@ const Portfolio = () => {
               </div>
             </div>
 
-            {/* Tools Card */}
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-stone-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
               <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Layout className="text-blue-500" size={28} />
@@ -455,7 +681,6 @@ const Portfolio = () => {
               </div>
             </div>
 
-            {/* Languages Card */}
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-stone-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
               <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Users className="text-emerald-500" size={28} />
@@ -474,27 +699,21 @@ const Portfolio = () => {
         </div>
       </section>
 
-      {/* Experience Section - "Timeline Journey" */}
       <section id="experience" className="py-24 bg-white">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="flex items-center gap-4 mb-16">
             <div className="h-px flex-1 bg-stone-200"></div>
-            <h2 className="text-3xl font-serif text-stone-800">Mein Werdegang</h2>
+            <h2 className="text-3xl font-serif text-stone-800">{t.experience.title}</h2>
             <div className="h-px flex-1 bg-stone-200"></div>
           </div>
 
           <div className="relative space-y-12 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-stone-200 before:to-transparent">
             {experiences.map((exp, index) => (
               <div key={index} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                
-                {/* Icon Dot */}
                 <div className={`flex items-center justify-center w-10 h-10 rounded-full border-4 border-white shadow-lg shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 ${exp.bg}`}>
                   {exp.icon}
                 </div>
-                
-                {/* Content Card */}
                 <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-stone-50 p-6 rounded-2xl border border-stone-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative">
-                  {/* Arrow */}
                   <div className="absolute top-4 -left-2 w-4 h-4 bg-stone-50 rotate-45 border-l border-b border-stone-100 md:hidden"></div>
                   <div className="hidden md:block absolute top-3 w-4 h-4 bg-stone-50 rotate-45 border-t border-l border-stone-100 group-odd:-right-2 group-odd:rotate-[135deg] group-even:-left-2 group-even:-rotate-45"></div>
 
@@ -518,13 +737,12 @@ const Portfolio = () => {
         </div>
       </section>
 
-      {/* Projects Section - Masonry-ish */}
       <section id="projects" className="py-24 bg-stone-50">
         <div className="container mx-auto px-6 max-w-6xl">
            <div className="flex justify-between items-end mb-12">
              <div>
-               <h2 className="text-sm font-bold text-emerald-600 tracking-widest uppercase mb-3">Ausgewählte Arbeiten</h2>
-               <h3 className="text-4xl font-serif text-stone-800">Aktuelle Projekte</h3>
+               <h2 className="text-sm font-bold text-emerald-600 tracking-widest uppercase mb-3">{t.projects.title}</h2>
+               <h3 className="text-4xl font-serif text-stone-800">{t.projects.subtitle}</h3>
              </div>
              <div className="hidden md:block">
                 <Sparkles className="text-emerald-300 w-12 h-12" />
@@ -534,7 +752,6 @@ const Portfolio = () => {
            <div className="grid md:grid-cols-3 gap-8">
               {projects.map((project, index) => (
                 <div key={index} className={`group relative bg-white rounded-3xl overflow-hidden border hover:shadow-2xl transition-all duration-500 flex flex-col ${project.color}`}>
-                  {/* Image Area with Logo */}
                   <div className="relative h-64 overflow-hidden flex items-center justify-center p-10">
                     <div className="w-full h-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-700 ease-out">
                        {project.Logo && <project.Logo className="w-full h-full max-w-[180px] opacity-80 mix-blend-multiply" />}
@@ -562,29 +779,23 @@ const Portfolio = () => {
         </div>
       </section>
 
-      {/* Contact Footer */}
       <section id="contact" className="py-24 bg-stone-900 text-stone-300 overflow-hidden relative">
-        {/* Decorative BG */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
            <div className="absolute -top-24 -right-24 w-96 h-96 bg-emerald-500 rounded-full blur-3xl"></div>
            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-rose-500 rounded-full blur-3xl"></div>
         </div>
 
         <div className="container mx-auto px-6 max-w-4xl text-center relative z-10">
-          <LotusIcon className="w-12 h-12 mx-auto mb-6 text-stone-500" />
-          <h2 className="text-4xl md:text-5xl font-serif text-white mb-8">Bereit, etwas Großartiges zu erschaffen?</h2>
+          <h2 className="text-4xl md:text-5xl font-serif text-white mb-8">{t.contact.title}</h2>
           <p className="text-lg text-stone-400 mb-12 max-w-2xl mx-auto">
-            Ich bin immer auf der Suche nach neuen Herausforderungen und Möglichkeiten, meine Leidenschaft für Design und Präzision einzubringen.
+            {t.contact.text}
           </p>
 
-          {/* UPDATED: Increased max-width to max-w-5xl to give buttons more room */}
           <div className="grid sm:grid-cols-3 gap-4 max-w-5xl mx-auto mb-16">
-            {/* MODIFIED: Email Link shows actual email, smaller text on mobile */}
             <a href="mailto:nguyenphanmyanh@gmail.com" className="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors group">
               <Mail className="text-emerald-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
               <span className="text-xs md:text-sm font-medium text-white">nguyenphanmyanh@gmail.com</span>
             </a>
-            {/* MODIFIED: LinkedIn Link shows username */}
             <a href="https://www.linkedin.com/in/myanh02/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors group">
               <Linkedin className="text-blue-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
               <span className="text-xs md:text-sm font-medium text-white">@myanh02</span>
@@ -596,7 +807,7 @@ const Portfolio = () => {
           </div>
 
           <div className="text-sm text-stone-600 border-t border-white/10 pt-8">
-            <p>© 2025 Phan My Anh Nguyen. Erstellt mit <Heart size={12} className="inline text-rose-500 mx-1 fill-rose-500" /> und Code.</p>
+            <p>© 2025 Phan My Anh Nguyen. {t.contact.footer} <Heart size={12} className="inline text-rose-500 mx-1 fill-rose-500" /> und Code.</p>
           </div>
         </div>
       </section>

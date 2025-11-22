@@ -2,7 +2,7 @@
   "name": "mia",
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://nguyendangtritoan.github.io/mia/", 
+  "homepage": "https://myanh.de", 
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
