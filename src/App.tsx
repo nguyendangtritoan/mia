@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Mail, Phone, MapPin, Download, Palette, Layout, Users, Code, Briefcase, GraduationCap, ChevronRight, FileText, User, Home, Folder, History, Linkedin } from 'lucide-react';
+import { Menu, X, Mail, Phone, MapPin, Download, Palette, Layout, Users, Code, Briefcase, GraduationCap, ChevronRight, FileText, User, Home, Folder, History, Linkedin, Eye } from 'lucide-react';
 import EncowayLogo from './EncowayLogo';
 import KukaLogo from './KukaLogo';
 import VWLogo from './VWLogo';
 import profileImage from './assets/profile.jpg'; 
 
-const App = () => {
+const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [scrolled, setScrolled] = useState(false);
+  // New state for resume modal
+  const [showResume, setShowResume] = useState(false);
 
   // Handle scroll effects
   useEffect(() => {
@@ -44,6 +46,12 @@ const App = () => {
         behavior: 'smooth'
       });
     }
+  };
+
+  // Toggle Resume Modal
+  const toggleResume = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent default download behavior
+    setShowResume(!showResume);
   };
 
   const navItems = [
@@ -115,11 +123,52 @@ const App = () => {
     languages: ["Deutsch (C1)", "Englisch (B2)", "Vietnamesisch (Muttersprache)"]
   };
   
-  const resumeUrl = "Phan My Anh Nguyen_Lebenslauf.pdf"; 
+  const resumeUrl = "https://drive.google.com/file/d/1D4BLzlOJM1oRUHO99a-lU9fZ8Fn-37CU/preview"; 
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-200 selection:text-blue-900">
       
+      {/* Resume Modal Popup */}
+      {showResume && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white w-full max-w-5xl h-[85vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden relative animate-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center p-4 border-b bg-slate-50">
+              <h3 className="font-bold text-slate-700 flex items-center gap-2">
+                <FileText size={18} className="text-blue-600"/> 
+                Lebenslauf Vorschau
+              </h3>
+              <div className="flex items-center gap-3">
+                <a 
+                  href={resumeUrl} 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                >
+                  <Download size={16} /> Download
+                </a>
+                <button 
+                  onClick={() => setShowResume(false)}
+                  className="p-2 hover:bg-slate-200 rounded-full transition-colors"
+                >
+                  <X size={20} className="text-slate-500" />
+                </button>
+              </div>
+            </div>
+            
+            {/* PDF Viewer (iframe) */}
+            <div className="flex-1 bg-slate-100 overflow-hidden relative">
+              <iframe 
+                src={resumeUrl} 
+                title="Resume PDF"
+                className="w-full h-full border-none"
+                allow="autoplay"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'py-4' : 'py-6'}`}>
         <div className="container mx-auto px-6 flex justify-center items-center relative">
@@ -204,9 +253,6 @@ const App = () => {
           <div className="flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20">
             {/* Text Content - Left Side */}
             <div className="flex-1 space-y-6 text-center md:text-left">
-              <span className="inline-block py-1 px-3 rounded-full bg-blue-50 text-blue-600 text-sm font-semibold tracking-wide mb-4 animate-fade-in">
-                PORTFOLIO 2025
-              </span>
               <h1 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight leading-tight">
                 Hi, ich bin <br/>
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
@@ -224,12 +270,14 @@ const App = () => {
                 >
                   Meine Arbeiten ansehen <ChevronRight size={18} />
                 </button>
+                {/* Replaced CV button with LinkedIn button */}
                 <a 
-                  href={resumeUrl}
-                  download="Phan_My_Anh_Nguyen_CV.pdf"
+                  href="https://www.linkedin.com/in/myanh02/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="px-8 py-4 bg-white border border-slate-200 text-slate-700 rounded-full font-medium hover:border-slate-400 transition-all flex items-center gap-2"
                 >
-                  CV Herunterladen <Download size={18} />
+                  LinkedIn <Linkedin size={18} />
                 </a>
               </div>
             </div>
@@ -297,6 +345,8 @@ const App = () => {
                   <div className="text-sm text-slate-400 mt-1">Nebenfächer: Volkswirtschaftslehre, Medienwissenschaft</div>
                 </div>
               </div>
+              
+              {/* Profile Picture Section Removed */}
             </div>
 
             <div>
@@ -452,7 +502,7 @@ const App = () => {
               <div className="font-medium text-slate-200">Email</div>
               <div className="text-sm text-slate-500 mt-1">nguyenphanmyanh@gmail.com</div>
             </a>
-            {/* Removed Phone Number Block */}
+            {/* Phone Removed */}
             <div className="bg-slate-800 p-6 rounded-xl hover:bg-slate-700 transition-colors group">
               <MapPin className="mx-auto mb-4 text-blue-400 group-hover:scale-110 transition-transform" size={32} />
               <div className="font-medium text-slate-200">Standort</div>
@@ -474,4 +524,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Portfolio;
