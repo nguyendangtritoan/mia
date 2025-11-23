@@ -15,7 +15,8 @@ import 'swiper/css/effect-cards';
 import EncowayLogo from './EncowayLogo';
 import KukaLogo from './KukaLogo';
 import VWLogo from './VWLogo';
-import UniLogo from './UniLogo'; // <--- IMPORTED NEW LOGO
+import UniLogo from './UniLogo'; 
+import JourneyDivider from './JourneyDivider'; // <--- IMPORTED DIVIDER
 
 // --- TYPE DEFINITION FOR PROJECTS ---
 interface Project {
@@ -94,9 +95,8 @@ const Portfolio = () => {
 
   const resumeUrl = "https://drive.google.com/file/d/1D4BLzlOJM1oRUHO99a-lU9fZ8Fn-37CU/preview";
   
-  // *** IMPORTANT: REPLACE THESE LINKS WITH YOUR ACTUAL PDF LINKS ***
-  const todoAppPdfUrl = "https://drive.google.com/file/d/1D4BLzlOJM1oRUHO99a-lU9fZ8Fn-37CU/preview"; 
-  const campusTauschPdfUrl = "https://drive.google.com/file/d/1D4BLzlOJM1oRUHO99a-lU9fZ8Fn-37CU/preview"; 
+  const todoAppPdfUrl = "https://drive.google.com/file/d/12qWc2aWSaTFAXu2885xmGEfQRRUE8LRK/preview"; 
+  const campusTauschPdfUrl = "https://drive.google.com/file/d/109oDtSaE_Y781CRKuJ_EJzzxP-CSlXSe/preview"; 
 
   const toggleLanguage = () => {
     setLanguage(prevLang => prevLang === 'de' ? 'en' : 'de');
@@ -153,7 +153,6 @@ const Portfolio = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
       
-      // Scroll logic
       const isBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50;
       if (isBottom) {
         setActiveSection('contact');
@@ -254,7 +253,7 @@ const Portfolio = () => {
       description: "Eine Sammlung von UI/UX-Projekten, die während des Studiums entwickelt wurden, darunter Apps und Plattformen.",
       metrics: ["ToDo App", "Campus Tausch"],
       color: "bg-indigo-50",
-      Logo: UniLogo, // FIXED: Using the new UniLogo component here
+      Logo: UniLogo,
       isGroup: true
     },
     {
@@ -481,7 +480,7 @@ const Portfolio = () => {
         )}
       </nav>
 
-      <section id="home" className="relative pt-40 pb-20 px-6 overflow-hidden min-h-screen flex items-center">
+      <section id="home" className="relative pt-40 pb-8 px-6 overflow-hidden min-h-screen flex items-center">
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
             <div className="absolute top-[10%] right-[5%] w-[500px] h-[500px] bg-rose-100/50 rounded-full blur-3xl opacity-60 mix-blend-multiply animate-pulse" style={{animationDuration: '8s'}}></div>
             <div className="absolute bottom-[10%] left-[10%] w-[400px] h-[400px] bg-emerald-100/50 rounded-full blur-3xl opacity-60 mix-blend-multiply animate-pulse" style={{animationDuration: '10s'}}></div>
@@ -525,7 +524,6 @@ const Portfolio = () => {
                 </button>
               </div>
 
-              {/* FIXED: STATS GRID */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-700 border-t border-stone-100 mt-8">
                   <div className="flex flex-col items-center sm:items-start space-y-1">
                       <div className="text-2xl md:text-3xl font-bold text-stone-800 flex items-center gap-2">
@@ -605,7 +603,9 @@ const Portfolio = () => {
         </div>
       </section>
 
-      <section id="about" className="py-24 relative">
+      <JourneyDivider />
+
+      <section id="about" className="py-24 pt-8 relative">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-sm font-bold text-emerald-600 tracking-widest uppercase mb-3">{t.skills.title}</h2>
