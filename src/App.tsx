@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Mail, MapPin, Download, Palette, Layout, Users, Briefcase, ChevronRight, FileText, User, Home, Folder, History, Linkedin, Eye, Sparkles, Heart, Globe } from 'lucide-react';
+import { Menu, X, Mail, MapPin, Download, Palette, Layout, Users, Briefcase, ChevronRight, FileText, User, Home, Folder, History, Linkedin, Eye, Sparkles, Heart, Globe, Code, CheckCircle, ListTodo, GraduationCap, School } from 'lucide-react';
 
 // --- SWIPER IMPORTS ---
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -11,11 +11,27 @@ import 'swiper/css';
 // @ts-ignore
 import 'swiper/css/effect-cards';
 
+// --- LOGO IMPORTS ---
 import EncowayLogo from './EncowayLogo';
 import KukaLogo from './KukaLogo';
 import VWLogo from './VWLogo';
+import UniLogo from './UniLogo'; // <--- IMPORTED NEW LOGO
 
-// --- ROLE TICKER COMPONENT (SMOOTH 3D CARD FLIP) ---
+// --- TYPE DEFINITION FOR PROJECTS ---
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  color: string;
+  category?: string;
+  metrics?: string[];
+  Logo?: React.ElementType; 
+  icon?: React.ReactNode;   
+  pdfUrl?: string;
+  isGroup?: boolean;
+}
+
+// --- ROLE TICKER COMPONENT ---
 
 const RoleTicker = ({ language }: { language: 'de' | 'en' }) => {
   const roles = {
@@ -34,7 +50,6 @@ const RoleTicker = ({ language }: { language: 'de' | 'en' }) => {
     return () => clearInterval(interval);
   }, []);
 
-  // UPDATED: Changed to Pink Tone
   const pillClass = "w-full text-center px-3 py-0.5 bg-pink-100 text-pink-700 rounded-full text-sm md:text-base border border-pink-200 font-bold block truncate leading-none shadow-sm";
 
   return (
@@ -69,13 +84,19 @@ const Portfolio = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [scrolled, setScrolled] = useState(false);
   const [showResume, setShowResume] = useState(false);
-  const [language, setLanguage] = useState<'de' | 'en'>('de');
   
-  // State for gallery indicators
+  const [activeProject, setActiveProject] = useState<string | null>(null);
+  const [showUniGroup, setShowUniGroup] = useState(false);
+
+  const [language, setLanguage] = useState<'de' | 'en'>('de');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [swiperRef, setSwiperRef] = useState<any>(null);
 
   const resumeUrl = "https://drive.google.com/file/d/1D4BLzlOJM1oRUHO99a-lU9fZ8Fn-37CU/preview";
+  
+  // *** IMPORTANT: REPLACE THESE LINKS WITH YOUR ACTUAL PDF LINKS ***
+  const todoAppPdfUrl = "https://drive.google.com/file/d/1D4BLzlOJM1oRUHO99a-lU9fZ8Fn-37CU/preview"; 
+  const campusTauschPdfUrl = "https://drive.google.com/file/d/1D4BLzlOJM1oRUHO99a-lU9fZ8Fn-37CU/preview"; 
 
   const toggleLanguage = () => {
     setLanguage(prevLang => prevLang === 'de' ? 'en' : 'de');
@@ -91,71 +112,37 @@ const Portfolio = () => {
 
   const translationsData = {
     de: {
-      nav: { 
-        home: 'Startseite', 
-        skills: 'Kenntnisse', 
-        experience: 'Erfahrung', 
-        projects: 'Projekte', 
-        contact: 'Kontakt' 
-      },
+      nav: { home: 'Startseite', skills: 'Kenntnisse', experience: 'Erfahrung', projects: 'Projekte', contact: 'Kontakt' },
       hero: { 
         open: 'Offen für neue Möglichkeiten', 
         hello: 'Xin chào, ich bin', 
         role_start: 'Eine', 
         role_end: ', die Kunst mit Logik verbindet. Ich gestalte intuitive digitale Erlebnisse mit Begeisterung und einem Blick fürs Detail.', 
         btn_projects: 'Projekte ansehen', 
-        btn_resume: 'Lebenslauf' 
+        btn_resume: 'Lebenslauf',
+        stats: { exp: 'Jahre Erfahrung', skills: 'Skills & Tools', langs: 'Sprachen' }
       },
-      skills: { 
-        title: 'Meine Expertise', 
-        subtitle: 'Design & Entwicklung' 
-      },
-      experience: { 
-        title: 'Mein Werdegang' 
-      },
-      projects: { 
-        title: 'Ausgewählte Arbeiten', 
-        subtitle: 'Aktuelle Projekte' 
-      },
-      contact: { 
-        title: 'Bereit, etwas Großartiges zu erschaffen?', 
-        text: 'Ich bin immer auf der Suche nach neuen Herausforderungen und Möglichkeiten, meine Leidenschaft für Design und Präzision einzubringen.', 
-        footer: 'Erstellt mit' 
-      },
+      skills: { title: 'Meine Expertise', subtitle: 'Design & Entwicklung' },
+      experience: { title: 'Mein Werdegang' },
+      projects: { title: 'Ausgewählte Arbeiten', subtitle: 'Aktuelle Projekte' },
+      contact: { title: 'Bereit, etwas Großartiges zu erschaffen?', text: 'Ich bin immer auf der Suche nach neuen Herausforderungen und Möglichkeiten.', footer: 'Erstellt mit' },
       roles: ["UI/UX-Designerin", "Mediengestalterin"]
     },
     en: {
-      nav: { 
-        home: 'Home', 
-        skills: 'Knowledge', 
-        experience: 'Experience', 
-        projects: 'Projects', 
-        contact: 'Contact' 
-      },
+      nav: { home: 'Home', skills: 'Knowledge', experience: 'Experience', projects: 'Projects', contact: 'Contact' },
       hero: { 
         open: 'Open for new opportunities', 
         hello: 'Xin chào, I am', 
         role_start: 'A', 
         role_end: ', blending art with logic. I craft intuitive digital experiences with enthusiasm and an eye for detail.', 
         btn_projects: 'View Projects', 
-        btn_resume: 'Resume' 
+        btn_resume: 'Resume',
+        stats: { exp: 'Years Exp.', skills: 'Skills & Tools', langs: 'Languages' }
       },
-      skills: { 
-        title: 'My Expertise', 
-        subtitle: 'Design & Development' 
-      },
-      experience: { 
-        title: 'My Journey' 
-      },
-      projects: { 
-        title: 'Selected Work', 
-        subtitle: 'Recent Projects' 
-      },
-      contact: { 
-        title: 'Ready to create something amazing?', 
-        text: 'I am always looking for new challenges and opportunities to bring my passion for design and precision.', 
-        footer: 'Built with' 
-      },
+      skills: { title: 'My Expertise', subtitle: 'Design & Development' },
+      experience: { title: 'My Journey' },
+      projects: { title: 'Selected Work', subtitle: 'Recent Projects' },
+      contact: { title: 'Ready to create something amazing?', text: 'I am always looking for new challenges and opportunities.', footer: 'Built with' },
       roles: ["UI/UX Designer", "Media Designer"]
     }
   };
@@ -166,15 +153,23 @@ const Portfolio = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
       
+      // Scroll logic
+      const isBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50;
+      if (isBottom) {
+        setActiveSection('contact');
+        return;
+      }
+
       const sections = ['home', 'about', 'experience', 'projects', 'contact'];
       const current = sections.find(section => {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
-          return rect.top <= window.innerHeight / 3 && rect.bottom >= window.innerHeight / 3;
+          return rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 3;
         }
         return false;
       });
+      
       if (current) setActiveSection(current);
     };
 
@@ -189,11 +184,7 @@ const Portfolio = () => {
       const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
     }
   };
 
@@ -219,7 +210,7 @@ const Portfolio = () => {
       company: "Volkswagen",
       role: "Praktikum Kommunikationsplattform",
       period: "09.2025 - Heute",
-      description: "Entwicklung und Umsetzung einer internen Kommunikationsplattform. Fokus auf Prozessdigitalisierung, Feedback-Auswertung und Optimierung der internen Kommunikationsstruktur.",
+      description: "Entwicklung und Umsetzung einer internen Kommunikationsplattform. Fokus auf Prozessdigitalisierung.",
       tags: ["Interne Kommunikation", "Prozessgestaltung", "Digitalisierung"],
       icon: <Briefcase size={18} className="text-white" />,
       bg: "bg-blue-600"
@@ -228,7 +219,7 @@ const Portfolio = () => {
       company: "encoway GmbH",
       role: "Werkstudentin UX/UI Design",
       period: "02.2024 - 04.2025",
-      description: "Durchführung von Expert Reviews und Competitor Analysis. Erstellung von Wireframes, Prototypen und UX/UI-Kommunikationsmaterialien. Gestaltung einer SharePoint-Seite für das UX-Team.",
+      description: "Durchführung von Expert Reviews und Competitor Analysis. Erstellung von Wireframes und Prototypen.",
       tags: ["Expert Reviews", "Prototyping", "SharePoint", "Visual Design"],
       icon: <Palette size={18} className="text-white" />,
       bg: "bg-emerald-500"
@@ -237,7 +228,7 @@ const Portfolio = () => {
       company: "Siemens AG",
       role: "Werkstudentin UX/UI Design",
       period: "08.2022 - 02.2023",
-      description: "Unterstützung bei der Pflege und Optimierung von Archivierungsprozessen. Verwaltung und Digitalisierung von Dokumenten im SAP-System.",
+      description: "Unterstützung bei der Pflege und Optimierung von Archivierungsprozessen. Verwaltung von Dokumenten im SAP-System.",
       tags: ["Prozessoptimierung", "SAP", "Organisation"],
       icon: <Briefcase size={18} className="text-white" />,
       bg: "bg-cyan-600"
@@ -246,15 +237,28 @@ const Portfolio = () => {
       company: "KUKA AG",
       role: "Praktikantin im UX Bereich",
       period: "04.2022 - 06.2022",
-      description: "Prototyping mit Axure 9 für Robotereinsatz-Handhelds. Recherche zu internationalen Tastaturlayouts und Entwicklung von UX-Patterns.",
+      description: "Prototyping mit Axure 9 für Robotereinsatz-Handhelds. Recherche zu internationalen Tastaturlayouts.",
       tags: ["Axure 9", "HMI Design", "User Research", "UX Patterns"],
       icon: <Layout size={18} className="text-white" />,
       bg: "bg-orange-500"
     }
   ];
 
-  const projects = [
+  // --- PROJECT DATA ---
+  
+  const mainProjects: Project[] = [
     {
+      id: "uni_group",
+      title: "Uni-Projekte",
+      category: "Academic Work",
+      description: "Eine Sammlung von UI/UX-Projekten, die während des Studiums entwickelt wurden, darunter Apps und Plattformen.",
+      metrics: ["ToDo App", "Campus Tausch"],
+      color: "bg-indigo-50",
+      Logo: UniLogo, // FIXED: Using the new UniLogo component here
+      isGroup: true
+    },
+    {
+      id: "vw",
       title: "Volkswagen Internal Hub",
       category: "Product Design",
       description: "Konzeption und Umsetzung einer zentralen Plattform zur Informationsverteilung für Mitarbeitende.",
@@ -263,6 +267,7 @@ const Portfolio = () => {
       Logo: VWLogo
     },
     {
+      id: "kuka",
       title: "KUKA Smart Handheld",
       category: "HMI / Industrial UX",
       description: "Optimierung der Benutzeroberfläche für Roboter-Steuerungsgeräte mittels High-Fidelity Prototyping in Axure 9.",
@@ -271,6 +276,7 @@ const Portfolio = () => {
       Logo: KukaLogo
     },
     {
+      id: "encoway",
       title: "Encoway UX Audit",
       category: "Research & Analysis",
       description: "Umfassende Analyse von Wettbewerber-Websites und Expert Reviews der eigenen Produkte zur Identifikation von UX-Schwachstellen.",
@@ -280,15 +286,40 @@ const Portfolio = () => {
     }
   ];
 
+  const uniProjects: Project[] = [
+    {
+      id: "todo",
+      title: "ToDo App",
+      description: "Eine Aufgabenverwaltungs-App für Web, iOS und Android. Fokus auf minimalistischem Design und Produktivität.",
+      icon: <ListTodo size={32} className="text-emerald-600" />,
+      color: "bg-emerald-50",
+      pdfUrl: todoAppPdfUrl
+    },
+    {
+      id: "campus",
+      title: "Campus Tausch",
+      description: "Eine Tausch-Plattform für Studierende der Uni Regensburg. Ermöglicht den Austausch von Dokumenten, Jobs und Wohnungen.",
+      icon: <School size={32} className="text-amber-700" />,
+      color: "bg-amber-50",
+      pdfUrl: campusTauschPdfUrl
+    }
+  ];
+
   const skills = {
     design: ["UX/UI Design", "Interaction Design", "Wireframing", "User Research", "Usability Testing", "Prototyping", "User Journey Mapping"],
     tools: ["Figma", "Adobe XD", "Adobe InDesign", "Illustrator", "Photoshop", "Sketch", "Miro", "Axure 9"],
     languages: ["Deutsch (C1)", "Englisch (B2)", "Vietnamesisch (Muttersprache)"]
   };
+
+  const getProjectById = (id: string) => {
+      const all = [...mainProjects, ...uniProjects];
+      return all.find(p => p.id === id);
+  };
   
   return (
     <div className="min-h-screen bg-stone-50 text-stone-800 font-sans selection:bg-rose-200 selection:text-rose-900">
       
+      {/* --- RESUME MODAL --- */}
       {showResume && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-stone-900/70 backdrop-blur-md animate-in fade-in duration-300">
           <div className="bg-white w-full max-w-5xl h-[85vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden relative animate-in zoom-in-95 duration-300 border-4 border-white ring-4 ring-stone-200">
@@ -306,21 +337,90 @@ const Portfolio = () => {
                 >
                   <Download size={16} /> Download
                 </a>
-                <button 
-                  onClick={() => setShowResume(false)}
-                  className="p-2 hover:bg-stone-200 rounded-full transition-colors"
-                >
+                <button onClick={() => setShowResume(false)} className="p-2 hover:bg-stone-200 rounded-full transition-colors">
                   <X size={20} className="text-stone-500" />
                 </button>
               </div>
             </div>
             <div className="flex-1 bg-slate-100 overflow-hidden relative">
-              <iframe 
-                src={resumeUrl} 
-                title="Resume PDF"
-                className="w-full h-full border-none"
-                allow="autoplay"
-              />
+              <iframe src={resumeUrl} title="Resume PDF" className="w-full h-full border-none" allow="autoplay" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- UNI PROJECTS GROUP SELECTION MODAL --- */}
+      {showUniGroup && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-stone-900/70 backdrop-blur-md animate-in fade-in duration-300">
+            <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-8 relative animate-in zoom-in-95 duration-300 border-4 border-white ring-4 ring-stone-200">
+                <button 
+                    onClick={() => setShowUniGroup(false)}
+                    className="absolute top-4 right-4 p-2 hover:bg-stone-100 rounded-full transition-colors"
+                >
+                    <X size={24} className="text-stone-500" />
+                </button>
+                
+                <div className="text-center mb-8">
+                    <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <GraduationCap size={32} className="text-indigo-600" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-stone-800">Uni-Projekte</h3>
+                    <p className="text-stone-500 mt-2">Wähle ein Projekt aus meiner Studienzeit</p>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                    {uniProjects.map((project) => (
+                        <button 
+                            key={project.id}
+                            onClick={() => {
+                                setShowUniGroup(false);
+                                setActiveProject(project.id);
+                            }}
+                            className={`p-6 rounded-2xl border text-left transition-all hover:shadow-lg hover:-translate-y-1 group ${project.color} border-stone-100 hover:border-stone-200`}
+                        >
+                            <div className="mb-4 bg-white w-12 h-12 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                                {project.icon}
+                            </div>
+                            <h4 className="font-bold text-lg text-stone-800 mb-2">{project.title}</h4>
+                            <p className="text-sm text-stone-600 line-clamp-2">{project.description}</p>
+                            <div className="mt-4 flex items-center text-sm font-medium text-blue-600 group-hover:gap-2 transition-all">
+                                Ansehen <ChevronRight size={16} />
+                            </div>
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+      )}
+
+      {/* --- PDF PREVIEW MODAL --- */}
+      {activeProject && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-stone-900/70 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="bg-white w-full max-w-5xl h-[85vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden relative animate-in zoom-in-95 duration-300 border-4 border-white ring-4 ring-stone-200">
+            <div className="flex justify-between items-center p-4 border-b bg-stone-50">
+              <h3 className="font-bold text-stone-700 flex items-center gap-2">
+                <Folder size={18} className="text-emerald-600"/> 
+                Projekt: {getProjectById(activeProject)?.title}
+              </h3>
+              <div className="flex items-center gap-3">
+                <button onClick={() => setActiveProject(null)} className="p-2 hover:bg-stone-200 rounded-full transition-colors">
+                  <X size={20} className="text-stone-500" />
+                </button>
+              </div>
+            </div>
+            <div className="flex-1 bg-slate-100 overflow-hidden relative">
+              {getProjectById(activeProject)?.pdfUrl ? (
+                  <iframe 
+                    src={getProjectById(activeProject)?.pdfUrl} 
+                    title="Project PDF"
+                    className="w-full h-full border-none"
+                    allow="autoplay"
+                  />
+              ) : (
+                  <div className="flex items-center justify-center h-full text-stone-400">
+                      Keine Vorschau verfügbar
+                  </div>
+              )}
             </div>
           </div>
         </div>
@@ -424,6 +524,29 @@ const Portfolio = () => {
                   {t.hero.btn_resume} <Eye size={18} />
                 </button>
               </div>
+
+              {/* FIXED: STATS GRID */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-700 border-t border-stone-100 mt-8">
+                  <div className="flex flex-col items-center sm:items-start space-y-1">
+                      <div className="text-2xl md:text-3xl font-bold text-stone-800 flex items-center gap-2">
+                          2+ <Briefcase size={18} className="text-emerald-500" />
+                      </div>
+                      <div className="text-xs md:text-sm text-stone-500 font-medium uppercase tracking-wide text-center sm:text-left">{t.hero.stats.exp}</div>
+                  </div>
+                  <div className="flex flex-col items-center sm:items-start space-y-1">
+                      <div className="text-2xl md:text-3xl font-bold text-stone-800 flex items-center gap-2">
+                          15+ <Code size={18} className="text-blue-500" />
+                      </div>
+                      <div className="text-xs md:text-sm text-stone-500 font-medium uppercase tracking-wide text-center sm:text-left">{t.hero.stats.skills}</div>
+                  </div>
+                  <div className="flex flex-col items-center sm:items-start space-y-1">
+                      <div className="text-2xl md:text-3xl font-bold text-stone-800 flex items-center gap-2">
+                          3 <Globe size={18} className="text-rose-500" />
+                      </div>
+                      <div className="text-xs md:text-sm text-stone-500 font-medium uppercase tracking-wide text-center sm:text-left">{t.hero.stats.langs}</div>
+                  </div>
+              </div>
+
             </div>
 
             <div className="flex-1 relative w-full max-w-md lg:max-w-lg animate-in fade-in zoom-in duration-1000 delay-300">
@@ -436,7 +559,6 @@ const Portfolio = () => {
                       
                       <div className="absolute inset-0 rounded-[3rem] overflow-hidden transform -rotate-2 transition-transform duration-500 hover:rotate-0 relative">
                         
-                        {/* SWIPER COMPONENT */}
                         <Swiper
                           effect={'cards'}
                           grabCursor={true}
@@ -462,7 +584,6 @@ const Portfolio = () => {
                       </div>
                   </div>
 
-                  {/* GALLERY INDICATORS */}
                   <div className="flex justify-center gap-2 mt-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
                     {profileImages.map((_, idx) => (
                       <button
@@ -589,8 +710,18 @@ const Portfolio = () => {
            </div>
 
            <div className="grid md:grid-cols-3 gap-8">
-              {projects.map((project, index) => (
-                <div key={index} className={`group relative bg-white rounded-3xl overflow-hidden border hover:shadow-2xl transition-all duration-500 flex flex-col ${project.color}`}>
+              {mainProjects.map((project, index) => (
+                <div 
+                  key={index} 
+                  onClick={() => {
+                      if (project.isGroup) {
+                          setShowUniGroup(true);
+                      } else if (project.pdfUrl) {
+                          setActiveProject(project.id);
+                      }
+                  }}
+                  className={`group relative bg-white rounded-3xl overflow-hidden border hover:shadow-2xl transition-all duration-500 flex flex-col ${project.color} cursor-pointer`}
+                >
                   <div className="relative h-64 overflow-hidden flex items-center justify-center p-10">
                     <div className="w-full h-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-700 ease-out">
                        {project.Logo && <project.Logo className="w-full h-full max-w-[180px] opacity-80 mix-blend-multiply" />}
@@ -599,13 +730,19 @@ const Portfolio = () => {
 
                   <div className="p-8 flex-1 flex flex-col bg-white relative z-20">
                     <div className="text-xs font-bold text-emerald-600 mb-2 uppercase tracking-wider">{project.category}</div>
-                    <h4 className="text-2xl font-bold text-stone-800 mb-3 group-hover:text-emerald-700 transition-colors">{project.title}</h4>
+                    <h4 className="text-2xl font-bold text-stone-800 mb-3 group-hover:text-emerald-700 transition-colors flex items-center justify-between">
+                        {project.title}
+                        {project.isGroup 
+                            ? <Folder size={20} className="opacity-0 group-hover:opacity-100 transition-opacity text-indigo-500" />
+                            : <Eye size={20} className="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-500" />
+                        }
+                    </h4>
                     <p className="text-stone-500 text-sm leading-relaxed mb-6 line-clamp-3">
                       {project.description}
                     </p>
                     
                     <div className="mt-auto pt-6 border-t border-stone-100 flex flex-wrap gap-2">
-                      {project.metrics.map((m, i) => (
+                      {project.metrics?.map((m, i) => (
                         <span key={i} className="text-xs font-medium text-stone-500 bg-stone-50 px-3 py-1 rounded-full">
                           {m}
                         </span>
