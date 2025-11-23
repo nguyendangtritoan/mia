@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Mail, MapPin, Download, Palette, Layout, Users, Briefcase, ChevronRight, ChevronLeft, FileText, User, Home, Folder, History, Linkedin, Eye, Sparkles, Heart, Globe } from 'lucide-react';
+import { Menu, X, Mail, MapPin, Download, Palette, Layout, Users, Briefcase, ChevronRight, FileText, User, Home, Folder, History, Linkedin, Eye, Sparkles, Heart, Globe } from 'lucide-react';
+
+// --- SWIPER IMPORTS ---
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectCards } from 'swiper/modules';
+
+// Import Swiper styles
+// @ts-ignore
+import 'swiper/css';
+// @ts-ignore
+import 'swiper/css/effect-cards';
+
 import EncowayLogo from './EncowayLogo';
 import KukaLogo from './KukaLogo';
 import VWLogo from './VWLogo';
@@ -23,28 +34,23 @@ const RoleTicker = ({ language }: { language: 'de' | 'en' }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const pillClass = "w-full text-center px-3 py-0.5 bg-emerald-100/50 text-emerald-800 rounded-full text-base md:text-lg border border-emerald-200 font-semibold block truncate leading-none shadow-md";
+  // UPDATED: Changed to Pink Tone
+  const pillClass = "w-full text-center px-3 py-0.5 bg-pink-100 text-pink-700 rounded-full text-sm md:text-base border border-pink-200 font-bold block truncate leading-none shadow-sm";
 
   return (
-    // Container with perspective for 3D effect
     <span className="inline-block h-[1.5em] w-48 relative align-middle mb-1 mx-1" style={{ perspective: '1000px' }}>
-      {/* The rotating wrapper */}
       <span
         className={`absolute inset-0 transition-transform duration-600 ${isFlipped ? '[transform:rotateX(180deg)]' : '[transform:rotateX(0deg)]'}`}
         style={{ 
             transformStyle: 'preserve-3d',
-            // Custom cubic-bezier for a "snap" shuffle feel (starts a bit slow, accelerates, then snaps)
             transitionTimingFunction: 'cubic-bezier(0.455, 0.03, 0.515, 0.955)' 
         }}
       >
-        {/* Front Face (Role 0) */}
         <span className="absolute inset-0 flex items-center justify-center" style={{ backfaceVisibility: 'hidden' }}>
           <span className={pillClass}>
             {currentRoles[0]}
           </span>
         </span>
-
-        {/* Back Face (Role 1) - Pre-rotated 180deg */}
         <span
           className="absolute inset-0 flex items-center justify-center"
           style={{ backfaceVisibility: 'hidden', transform: 'rotateX(180deg)' }}
@@ -63,10 +69,13 @@ const Portfolio = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [scrolled, setScrolled] = useState(false);
   const [showResume, setShowResume] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
-  // FIXED: TypeScript state definition
   const [language, setLanguage] = useState<'de' | 'en'>('de');
+  
+  // State for gallery indicators
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [swiperRef, setSwiperRef] = useState<any>(null);
+
+  const resumeUrl = "https://drive.google.com/file/d/1D4BLzlOJM1oRUHO99a-lU9fZ8Fn-37CU/preview";
 
   const toggleLanguage = () => {
     setLanguage(prevLang => prevLang === 'de' ? 'en' : 'de');
@@ -79,14 +88,6 @@ const Portfolio = () => {
     "https://drive.google.com/thumbnail?id=1uLEKkvzCVwDVaydJcbsEqM-gt2o375xB&sz=w1000",
     "https://drive.google.com/thumbnail?id=1Sq-lthddelXJK-rrDhTcUyNYOkaWhJvy&sz=w1000"
   ];
-
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % profileImages.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + profileImages.length) % profileImages.length);
-  };
 
   const translationsData = {
     de: {
@@ -196,9 +197,13 @@ const Portfolio = () => {
     }
   };
 
-  const toggleResume = (e: React.MouseEvent) => {
+  const handleResumeClick = (e: React.MouseEvent) => {
     e.preventDefault(); 
-    setShowResume(!showResume);
+    if (window.innerWidth < 768) {
+        window.open(resumeUrl, '_blank');
+    } else {
+        setShowResume(!showResume);
+    }
   };
 
   const navItems = [
@@ -281,8 +286,6 @@ const Portfolio = () => {
     languages: ["Deutsch (C1)", "Englisch (B2)", "Vietnamesisch (Muttersprache)"]
   };
   
-  const resumeUrl = "https://drive.google.com/file/d/1D4BLzlOJM1oRUHO99a-lU9fZ8Fn-37CU/preview";
-
   return (
     <div className="min-h-screen bg-stone-50 text-stone-800 font-sans selection:bg-rose-200 selection:text-rose-900">
       
@@ -327,14 +330,11 @@ const Portfolio = () => {
         <div className="bg-white/80 backdrop-blur-xl border border-white/50 shadow-lg shadow-stone-200/50 rounded-full px-2 py-2 flex items-center gap-1 md:gap-2 max-w-fit mx-auto">
           
           {/* LEFT: LinkedIn Button & Logo */}
-          {/* FIXED: Added md:mr-2 so the margin is removed on mobile */}
           <div className="flex items-center md:mr-2">
-              {/* Moved LinkedIn Here - Added md:mr-2 to remove right margin on mobile */}
               <a href="https://www.linkedin.com/in/myanh02/" target="_blank" rel="noopener noreferrer" className="p-2 md:mr-2 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100 transition-colors hover:scale-110 transform duration-200">
                 <Linkedin size={18} />
               </a>
 
-              {/* FIXED: Changed from span hidden to div hidden md:block. This removes the container's padding on mobile completely. */}
               <div className="hidden md:block px-2 font-bold text-emerald-700 cursor-pointer" onClick={() => scrollTo('home')}>
                 <span>PMN.</span>
               </div>
@@ -355,7 +355,6 @@ const Portfolio = () => {
 
           {/* RIGHT: Language Toggle & Mobile Menu */}
           <div className="flex items-center gap-2 ml-2 pl-2 border-l border-stone-200">
-            {/* Moved Language Toggle Here */}
             <button
                 onClick={toggleLanguage}
                 className="p-2 font-bold text-emerald-700 flex items-center gap-1 cursor-pointer bg-stone-100/50 hover:bg-stone-200 rounded-full transition-colors"
@@ -421,44 +420,62 @@ const Portfolio = () => {
                   <span className="relative flex items-center gap-2">{t.hero.btn_projects} <ChevronRight size={18} /></span>
                 </button>
                 
-                <button onClick={toggleResume} className="px-8 py-4 bg-white border border-stone-200 text-stone-700 rounded-full font-medium hover:border-rose-300 hover:text-rose-600 hover:bg-rose-50 transition-all flex items-center gap-2 shadow-sm hover:shadow-md">
+                <button onClick={handleResumeClick} className="px-8 py-4 bg-white border border-stone-200 text-stone-700 rounded-full font-medium hover:border-rose-300 hover:text-rose-600 hover:bg-rose-50 transition-all flex items-center gap-2 shadow-sm hover:shadow-md">
                   {t.hero.btn_resume} <Eye size={18} />
                 </button>
               </div>
             </div>
 
             <div className="flex-1 relative w-full max-w-md lg:max-w-lg animate-in fade-in zoom-in duration-1000 delay-300">
-               <div className="relative aspect-[4/5] mx-auto group">
-                  <div className="absolute top-[-20px] right-[-20px] w-24 h-24 bg-rose-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-                  <div className="absolute bottom-[-10px] left-[-10px] w-32 h-32 bg-emerald-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-700"></div>
-                  
-                  <div className="absolute inset-0 bg-stone-200 rounded-[3rem] transform rotate-3"></div>
-                  <div className="absolute inset-0 bg-white rounded-[3rem] border-4 border-white shadow-2xl overflow-hidden transform -rotate-2 transition-transform duration-500 hover:rotate-0 relative">
-                    <img src={profileImages[currentImageIndex]} alt="Phan My Anh Nguyen" className="w-full h-full object-cover transition-all duration-500" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/20 to-transparent mix-blend-overlay"></div>
+               <div className="flex flex-col items-center">
+                  <div className="relative aspect-[3/4] w-full mx-auto group">
+                      <div className="absolute top-[-20px] right-[-20px] w-24 h-24 bg-rose-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+                      <div className="absolute bottom-[-10px] left-[-10px] w-32 h-32 bg-emerald-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-700"></div>
+                      
+                      <div className="absolute inset-0 bg-stone-200 rounded-[3rem] transform rotate-3"></div>
+                      
+                      <div className="absolute inset-0 rounded-[3rem] overflow-hidden transform -rotate-2 transition-transform duration-500 hover:rotate-0 relative">
+                        
+                        {/* SWIPER COMPONENT */}
+                        <Swiper
+                          effect={'cards'}
+                          grabCursor={true}
+                          modules={[EffectCards]}
+                          onSwiper={setSwiperRef}
+                          onSlideChange={(swiper) => setCurrentImageIndex(swiper.activeIndex)}
+                          className="w-full h-full rounded-[2.8rem]"
+                        >
+                          {profileImages.map((img, idx) => (
+                            <SwiperSlide key={idx} className="rounded-[2.8rem] overflow-hidden bg-white">
+                                <div className="w-full aspect-[3/4] relative">
+                                    <img 
+                                      src={img} 
+                                      alt={`Profile ${idx}`} 
+                                      className="absolute inset-0 w-full h-full object-cover block" 
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/20 to-transparent mix-blend-overlay pointer-events-none"></div>
+                                </div>
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
 
-                    <button 
-                      onClick={prevImage}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full text-white hover:bg-white/40 transition-all opacity-0 group-hover:opacity-100"
-                    >
-                      <ChevronLeft size={24} />
-                    </button>
-                    
-                    <button 
-                      onClick={nextImage}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full text-white hover:bg-white/40 transition-all opacity-0 group-hover:opacity-100"
-                    >
-                      <ChevronRight size={24} />
-                    </button>
+                      </div>
+                  </div>
 
-                    <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-                      {profileImages.map((_, idx) => (
-                        <div 
-                          key={idx} 
-                          className={`w-2 h-2 rounded-full transition-all ${idx === currentImageIndex ? 'bg-white w-4' : 'bg-white/50'}`}
-                        />
-                      ))}
-                    </div>
+                  {/* GALLERY INDICATORS */}
+                  <div className="flex justify-center gap-2 mt-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
+                    {profileImages.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => swiperRef?.slideTo(idx)}
+                        className={`h-2 rounded-full transition-all duration-300 hover:scale-110 ${
+                          idx === currentImageIndex 
+                            ? 'w-6 bg-emerald-500' 
+                            : 'w-2 bg-stone-300 hover:bg-emerald-300'
+                        }`}
+                        aria-label={`Go to slide ${idx + 1}`}
+                      />
+                    ))}
                   </div>
                </div>
             </div>
