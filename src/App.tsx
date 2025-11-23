@@ -16,7 +16,7 @@ import EncowayLogo from './EncowayLogo';
 import KukaLogo from './KukaLogo';
 import VWLogo from './VWLogo';
 import UniLogo from './UniLogo'; 
-import JourneyDivider from './JourneyDivider'; // <--- IMPORTED DIVIDER
+import JourneyDivider from './JourneyDivider';
 
 // --- TYPE DEFINITION FOR PROJECTS ---
 interface Project {
@@ -243,8 +243,6 @@ const Portfolio = () => {
     }
   ];
 
-  // --- PROJECT DATA ---
-  
   const mainProjects: Project[] = [
     {
       id: "uni_group",
@@ -318,7 +316,6 @@ const Portfolio = () => {
   return (
     <div className="min-h-screen bg-stone-50 text-stone-800 font-sans selection:bg-rose-200 selection:text-rose-900">
       
-      {/* --- RESUME MODAL --- */}
       {showResume && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-stone-900/70 backdrop-blur-md animate-in fade-in duration-300">
           <div className="bg-white w-full max-w-5xl h-[85vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden relative animate-in zoom-in-95 duration-300 border-4 border-white ring-4 ring-stone-200">
@@ -371,9 +368,14 @@ const Portfolio = () => {
                     {uniProjects.map((project) => (
                         <button 
                             key={project.id}
+                            // FIXED: Mobile check for Uni Projects inside modal
                             onClick={() => {
-                                setShowUniGroup(false);
-                                setActiveProject(project.id);
+                                if (window.innerWidth < 768 && project.pdfUrl) {
+                                    window.open(project.pdfUrl, '_blank');
+                                } else {
+                                    setShowUniGroup(false);
+                                    setActiveProject(project.id);
+                                }
                             }}
                             className={`p-6 rounded-2xl border text-left transition-all hover:shadow-lg hover:-translate-y-1 group ${project.color} border-stone-100 hover:border-stone-200`}
                         >
@@ -713,11 +715,16 @@ const Portfolio = () => {
               {mainProjects.map((project, index) => (
                 <div 
                   key={index} 
+                  // FIXED: Mobile check for Main Projects grid
                   onClick={() => {
                       if (project.isGroup) {
                           setShowUniGroup(true);
                       } else if (project.pdfUrl) {
-                          setActiveProject(project.id);
+                          if (window.innerWidth < 768) {
+                             window.open(project.pdfUrl, '_blank');
+                          } else {
+                             setActiveProject(project.id);
+                          }
                       }
                   }}
                   className={`group relative bg-white rounded-3xl overflow-hidden border hover:shadow-2xl transition-all duration-500 flex flex-col ${project.color} cursor-pointer`}
