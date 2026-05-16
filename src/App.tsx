@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Mail, MapPin, Download, Palette, Layout, Users, Briefcase, ChevronRight, FileText, User, Home, Folder, History, Linkedin, Eye, Sparkles, Heart, Globe, Code, CheckCircle, ListTodo, GraduationCap, School } from 'lucide-react';
+import { Menu, X, Mail, MapPin, Phone, Download, Palette, Layout, Users, Briefcase, ChevronRight, FileText, User, Home, Folder, History, Linkedin, Eye, Sparkles, Heart, Globe, Code, ListTodo, GraduationCap, School } from 'lucide-react';
 
 // --- SWIPER IMPORTS ---
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCards } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
 
 // Import Swiper styles
-// @ts-ignore
 import 'swiper/css';
-// @ts-ignore
 import 'swiper/css/effect-cards';
 
 // --- LOGO IMPORTS ---
@@ -16,6 +15,7 @@ import EncowayLogo from './EncowayLogo';
 import KukaLogo from './KukaLogo';
 import VWLogo from './VWLogo';
 import UniLogo from './UniLogo'; 
+import BILogo from './BILOGO';
 import JourneyDivider from './JourneyDivider';
 
 // --- TYPE DEFINITION FOR PROJECTS ---
@@ -80,6 +80,181 @@ const RoleTicker = ({ language }: { language: 'de' | 'en' }) => {
   );
 };
 
+const cursorArrowUrl = `${import.meta.env.BASE_URL}arrowhead-rounded-outline.svg`;
+
+type CursorBurst = {
+  id: number;
+  x: number;
+  y: number;
+};
+
+const FigmaCursor = () => {
+  const cursorRef = React.useRef<HTMLDivElement | null>(null);
+  const targetPositionRef = React.useRef({ x: -80, y: -80 });
+  const followerPositionRef = React.useRef({ x: -80, y: -80 });
+  const previousPointerPositionRef = React.useRef<{ x: number; y: number } | null>(null);
+  const targetAngleRef = React.useRef(-151);
+  const followerAngleRef = React.useRef(-151);
+  const animationFrameRef = React.useRef<number | null>(null);
+  const burstIdRef = React.useRef(0);
+  const [isVisible, setIsVisible] = React.useState(false);
+  const [isInteractive, setIsInteractive] = React.useState(false);
+  const [isPressing, setIsPressing] = React.useState(false);
+  const [clickBursts, setClickBursts] = React.useState<CursorBurst[]>([]);
+
+  React.useEffect(() => {
+    const pointerQuery = window.matchMedia('(pointer: fine)');
+    if (!pointerQuery.matches) return;
+
+    const cursorClass = 'figma-cursor-enabled';
+    const interactiveSelector = [
+      'a',
+      'button',
+      '[role="button"]',
+      'input',
+      'textarea',
+      'select',
+      'summary',
+      'iframe',
+      '[tabindex]:not([tabindex="-1"])'
+    ].join(',');
+    const burstTimeouts: number[] = [];
+    const cursorHeadGap = 44;
+
+    document.documentElement.classList.add(cursorClass);
+
+    const renderCursor = () => {
+      const target = targetPositionRef.current;
+      const follower = followerPositionRef.current;
+
+      const angleDelta = ((targetAngleRef.current - followerAngleRef.current + 540) % 360) - 180;
+      followerAngleRef.current += angleDelta * 0.18;
+      const angleInRadians = followerAngleRef.current * (Math.PI / 180);
+      const followerTipTarget = {
+        x: target.x - Math.cos(angleInRadians) * cursorHeadGap,
+        y: target.y - Math.sin(angleInRadians) * cursorHeadGap
+      };
+
+      follower.x += (followerTipTarget.x - follower.x) * 0.16;
+      follower.y += (followerTipTarget.y - follower.y) * 0.16;
+
+      cursorRef.current?.style.setProperty('--cursor-x', `${follower.x}px`);
+      cursorRef.current?.style.setProperty('--cursor-y', `${follower.y}px`);
+      cursorRef.current?.style.setProperty('--cursor-angle', `${followerAngleRef.current}deg`);
+
+      animationFrameRef.current = window.requestAnimationFrame(renderCursor);
+    };
+
+    const addClickBurst = (x: number, y: number) => {
+      const id = burstIdRef.current + 1;
+      burstIdRef.current = id;
+
+      setClickBursts((bursts) => [...bursts.slice(-4), { id, x, y }]);
+
+      const timeout = window.setTimeout(() => {
+        setClickBursts((bursts) => bursts.filter((burst) => burst.id !== id));
+      }, 650);
+
+      burstTimeouts.push(timeout);
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      const target = event.target;
+      const nextPosition = { x: event.clientX, y: event.clientY };
+      const previousPosition = previousPointerPositionRef.current;
+
+      if (previousPosition) {
+        const deltaX = nextPosition.x - previousPosition.x;
+        const deltaY = nextPosition.y - previousPosition.y;
+
+        if (Math.hypot(deltaX, deltaY) > 2) {
+          targetAngleRef.current = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+        }
+      }
+
+      previousPointerPositionRef.current = nextPosition;
+      targetPositionRef.current = nextPosition;
+      setIsVisible(true);
+      setIsInteractive(target instanceof Element && Boolean(target.closest(interactiveSelector)));
+    };
+
+    const handlePointerLeave = () => {
+      setIsVisible(false);
+      setIsPressing(false);
+      previousPointerPositionRef.current = null;
+    };
+
+    const handlePointerDown = (event: PointerEvent) => {
+      setIsPressing(true);
+      addClickBurst(event.clientX, event.clientY);
+    };
+
+    const handlePointerUp = () => setIsPressing(false);
+
+    animationFrameRef.current = window.requestAnimationFrame(renderCursor);
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerleave', handlePointerLeave);
+    window.addEventListener('pointerdown', handlePointerDown);
+    window.addEventListener('pointerup', handlePointerUp);
+
+    return () => {
+      document.documentElement.classList.remove(cursorClass);
+      if (animationFrameRef.current !== null) {
+        window.cancelAnimationFrame(animationFrameRef.current);
+      }
+      burstTimeouts.forEach((timeout) => window.clearTimeout(timeout));
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerleave', handlePointerLeave);
+      window.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('pointerup', handlePointerUp);
+    };
+  }, []);
+
+  return (
+    <>
+      <div
+        ref={cursorRef}
+        aria-hidden="true"
+        className={`figma-cursor ${isVisible ? 'is-visible' : ''} ${isInteractive ? 'is-interactive' : ''} ${isPressing ? 'is-pressing' : ''}`}
+      >
+        <div className="figma-cursor__inner">
+          <img className="figma-cursor__arrow" src={cursorArrowUrl} alt="" draggable={false} />
+        </div>
+      </div>
+      {clickBursts.map((burst) => (
+        <span
+          key={burst.id}
+          aria-hidden="true"
+          className="figma-cursor__click-burst"
+          style={{
+            '--burst-x': `${burst.x}px`,
+            '--burst-y': `${burst.y}px`
+          } as React.CSSProperties}
+        >
+          <svg className="figma-cursor__spark" viewBox="0 0 80 80" aria-hidden="true" focusable="false">
+            <path
+              className="figma-cursor__spark-halo"
+              d="M31.5002 20.6751L30.6481 12.7227L29.796 20.6751C28.9048 28.9931 21.9189 35.8954 12.4375 37.8259C21.9189 39.7564 28.9048 46.6587 29.796 54.9767L30.6481 62.9291L31.5002 54.9767C32.3914 46.6586 39.3773 39.7564 48.8587 37.8259C39.3773 35.8954 32.3914 28.9931 31.5002 20.6751Z"
+            />
+            <path
+              className="figma-cursor__spark-halo figma-cursor__spark-small"
+              d="M54.7759 38.6445L54.2114 33.3764L53.6469 38.6445C53.0565 44.1549 48.4287 48.7273 42.1477 50.0062C48.4287 51.285 53.0565 55.8575 53.6469 61.3678L54.2114 66.636L54.7759 61.3678C55.3663 55.8575 59.9941 51.285 66.2751 50.0062C59.9941 48.7273 55.3663 44.1549 54.7759 38.6445Z"
+            />
+            <path
+              className="figma-cursor__spark-shape"
+              d="M30.6481 12.7227L31.5002 20.6751C32.3914 28.9931 39.3773 35.8954 48.8587 37.8259C39.3773 39.7564 32.3914 46.6586 31.5002 54.9767L30.6481 62.9291L29.796 54.9767C28.9048 46.6586 21.9189 39.7564 12.4375 37.8259C21.9189 35.8954 28.9048 28.9931 29.796 20.6751L30.6481 12.7227Z"
+            />
+            <path
+              className="figma-cursor__spark-shape figma-cursor__spark-small"
+              d="M54.2122 33.375L54.7766 38.6432C55.367 44.1535 59.9949 48.7259 66.2759 50.0048C59.9949 51.2836 55.367 55.8561 54.7766 61.3664L54.2122 66.6346L53.6477 61.3664C53.0573 55.8561 48.4294 51.2836 42.1484 50.0048C48.4294 48.7259 53.0573 44.1535 53.6477 38.6432L54.2122 33.375Z"
+            />
+          </svg>
+        </span>
+      ))}
+    </>
+  );
+};
+
 const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -91,9 +266,10 @@ const Portfolio = () => {
 
   const [language, setLanguage] = useState<'de' | 'en'>('de');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [swiperRef, setSwiperRef] = useState<any>(null);
+  const [swiperRef, setSwiperRef] = useState<SwiperType | null>(null);
+  const profilePointerStartRef = React.useRef<{ x: number; y: number } | null>(null);
 
-  const resumeUrl = "https://drive.google.com/file/d/1D4BLzlOJM1oRUHO99a-lU9fZ8Fn-37CU/preview";
+  const resumeUrl = `${import.meta.env.BASE_URL}PhanMyAnh_Nguyen_CV.pdf`;
   
   const todoAppPdfUrl = "https://drive.google.com/file/d/12qWc2aWSaTFAXu2885xmGEfQRRUE8LRK/preview"; 
   const campusTauschPdfUrl = "https://drive.google.com/file/d/109oDtSaE_Y781CRKuJ_EJzzxP-CSlXSe/preview"; 
@@ -109,6 +285,36 @@ const Portfolio = () => {
     "https://drive.google.com/thumbnail?id=1uLEKkvzCVwDVaydJcbsEqM-gt2o375xB&sz=w1000",
     "https://drive.google.com/thumbnail?id=1Sq-lthddelXJK-rrDhTcUyNYOkaWhJvy&sz=w1000"
   ];
+
+  const shiftProfilePhoto = () => {
+    if (!swiperRef) return;
+
+    const nextIndex = swiperRef.activeIndex === profileImages.length - 1 ? 0 : swiperRef.activeIndex + 1;
+    swiperRef.slideTo(nextIndex);
+  };
+
+  const handleProfilePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    profilePointerStartRef.current = { x: event.clientX, y: event.clientY };
+  };
+
+  const handleProfilePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!profilePointerStartRef.current) return;
+
+    const deltaX = event.clientX - profilePointerStartRef.current.x;
+    const deltaY = event.clientY - profilePointerStartRef.current.y;
+    profilePointerStartRef.current = null;
+
+    if (Math.hypot(deltaX, deltaY) < 8) {
+      shiftProfilePhoto();
+    }
+  };
+
+  const handleProfileKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+
+    event.preventDefault();
+    shiftProfilePhoto();
+  };
 
   const translationsData = {
     de: {
@@ -206,44 +412,53 @@ const Portfolio = () => {
 
   const experiences = [
     {
-      company: "Volkswagen",
-      role: "Praktikum Kommunikationsplattform",
-      period: "09.2025 - Heute",
-      description: "Entwicklung und Umsetzung einer internen Kommunikationsplattform. Fokus auf Prozessdigitalisierung.",
-      tags: ["Interne Kommunikation", "Prozessgestaltung", "Digitalisierung"],
-      icon: <Briefcase size={18} className="text-white" />,
-      bg: "bg-blue-600"
+      company: "Boehringer Ingelheim",
+      role: "Praktikantin - Gestaltung des QMS-Portals",
+      period: "03.2026 - Heute",
+      description: "Analyse und Neustrukturierung bestehender Intranetseiten im Qualitätsmanagement sowie Konzeption eines nutzerfreundlichen QMS-Portals.",
+      tags: ["QMS-Portal", "Intranet", "Informationsarchitektur", "UX Design"],
+      Logo: BILogo,
+      logoClassName: "w-full max-w-[78px] max-h-9"
+    },
+    {
+      company: "Volkswagen AG",
+      role: "Praktikantin - Gestaltung einer internen Kommunikationsplattform",
+      period: "09.2025 - 03.2026",
+      description: "Unterstützung beim Aufbau der internen Kommunikationsplattform Entgelt-Wiki inklusive Nutzungsanalyse, Umfrage mit ca. 100 Personen und Veröffentlichung von Beiträgen.",
+      tags: ["Entgelt-Wiki", "Nutzungsanalyse", "Umfrage", "Intranet"],
+      Logo: VWLogo,
+      logoClassName: "w-10 h-10 text-blue-900"
     },
     {
       company: "encoway GmbH",
       role: "Werkstudentin UX/UI Design",
       period: "02.2024 - 04.2025",
-      description: "Durchführung von Expert Reviews und Competitor Analysis. Erstellung von Wireframes und Prototypen.",
-      tags: ["Expert Reviews", "Prototyping", "SharePoint", "Visual Design"],
-      icon: <Palette size={18} className="text-white" />,
-      bg: "bg-emerald-500"
-    },
-    {
-      company: "Siemens AG",
-      role: "Werkstudentin UX/UI Design",
-      period: "08.2022 - 02.2023",
-      description: "Unterstützung bei der Pflege und Optimierung von Archivierungsprozessen. Verwaltung von Dokumenten im SAP-System.",
-      tags: ["Prozessoptimierung", "SAP", "Organisation"],
-      icon: <Briefcase size={18} className="text-white" />,
-      bg: "bg-cyan-600"
+      description: "Analyse von Wettbewerber-Websites, Expert Reviews mit Handlungsempfehlungen, Wireframes, Prototypen und UX/UI-Kommunikationsmaterialien.",
+      tags: ["Expert Reviews", "Wireframes", "Prototyping", "SharePoint"],
+      Logo: EncowayLogo,
+      logoClassName: "w-full max-w-[78px] max-h-9"
     },
     {
       company: "KUKA AG",
-      role: "Praktikantin im UX Bereich",
+      role: "Praktikantin UX Design",
       period: "04.2022 - 06.2022",
-      description: "Prototyping mit Axure 9 für Robotereinsatz-Handhelds. Recherche zu internationalen Tastaturlayouts.",
-      tags: ["Axure 9", "HMI Design", "User Research", "UX Patterns"],
-      icon: <Layout size={18} className="text-white" />,
-      bg: "bg-orange-500"
+      description: "Prototyping mit Axure 9 zur Optimierung eines Robotik-Handhelds sowie Recherche zu Tastaturen, UX-Patterns und Designkomponenten.",
+      tags: ["Axure 9", "HMI Design", "UX Patterns", "Designkomponenten"],
+      Logo: KukaLogo,
+      logoClassName: "w-full max-w-[76px] max-h-9"
     }
   ];
 
   const mainProjects: Project[] = [
+    {
+      id: "boehringer",
+      title: "Boehringer QMS Portal",
+      category: "Intranet / UX Design",
+      description: "Analyse und Neustrukturierung bestehender Intranetseiten im Qualitätsmanagement sowie Konzeption eines nutzerfreundlichen QMS-Portals.",
+      metrics: ["QMS-Portal", "Intranet-Struktur", "UX-Konzept"],
+      color: "bg-teal-50",
+      Logo: BILogo
+    },
     {
       id: "uni_group",
       title: "Uni-Projekte",
@@ -256,10 +471,10 @@ const Portfolio = () => {
     },
     {
       id: "vw",
-      title: "Volkswagen Internal Hub",
+      title: "Volkswagen Entgelt-Wiki",
       category: "Product Design",
-      description: "Konzeption und Umsetzung einer zentralen Plattform zur Informationsverteilung für Mitarbeitende.",
-      metrics: ["Zentrale Info-Verteilung", "Feedback-Integration"],
+      description: "Aufbau und Gestaltung einer internen Kommunikationsplattform inklusive Analyse der alten Website und Nutzerumfrage.",
+      metrics: ["Interne Kommunikation", "Nutzungsanalyse"],
       color: "bg-blue-50",
       Logo: VWLogo
     },
@@ -274,10 +489,10 @@ const Portfolio = () => {
     },
     {
       id: "encoway",
-      title: "Encoway UX Audit",
+      title: "Encoway UX/UI Audit",
       category: "Research & Analysis",
-      description: "Umfassende Analyse von Wettbewerber-Websites und Expert Reviews der eigenen Produkte zur Identifikation von UX-Schwachstellen.",
-      metrics: ["Competitor Analysis", "Heuristic Eval"],
+      description: "Wettbewerbsanalysen, Expert Reviews, Wireframes, Prototypen und UX/UI-Kommunikationsmaterialien für digitale Produkte.",
+      metrics: ["Competitor Analysis", "Expert Reviews"],
       color: "bg-green-50",
       Logo: EncowayLogo
     }
@@ -303,8 +518,8 @@ const Portfolio = () => {
   ];
 
   const skills = {
-    design: ["UX/UI Design", "Interaction Design", "Wireframing", "User Research", "Usability Testing", "Prototyping", "User Journey Mapping"],
-    tools: ["Figma", "Adobe XD", "Adobe InDesign", "Illustrator", "Photoshop", "Sketch", "Miro", "Axure 9"],
+    design: ["UX/UI Design", "Interaction Design", "Wireframing", "User Research", "Usability Testing", "Prototyping", "User Journey Mapping", "CSS / HTML"],
+    tools: ["Figma", "Adobe XD", "Adobe InDesign", "Adobe Illustrator", "Adobe Photoshop", "Sketch", "Miro", "Microsoft Office", "SharePoint", "Confluence"],
     languages: ["Deutsch (C1)", "Englisch (B2)", "Vietnamesisch (Muttersprache)"]
   };
 
@@ -312,9 +527,22 @@ const Portfolio = () => {
       const all = [...mainProjects, ...uniProjects];
       return all.find(p => p.id === id);
   };
+
+  const getProjectLogoClassName = (projectId: string) => {
+    const logoClassNames: Record<string, string> = {
+      boehringer: 'w-full max-w-[120px] max-h-14',
+      uni_group: 'w-full max-w-[132px] max-h-16',
+      vw: 'h-16 w-16 text-blue-900',
+      kuka: 'w-full max-w-[130px] max-h-14',
+      encoway: 'w-full max-w-[140px] max-h-14'
+    };
+
+    return `${logoClassNames[projectId] ?? 'w-full max-w-[120px] max-h-14'} opacity-90 mix-blend-multiply`;
+  };
   
   return (
     <div className="min-h-screen bg-stone-50 text-stone-800 font-sans selection:bg-rose-200 selection:text-rose-900">
+      <FigmaCursor />
       
       {showResume && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-stone-900/70 backdrop-blur-md animate-in fade-in duration-300">
@@ -322,7 +550,7 @@ const Portfolio = () => {
             <div className="flex justify-between items-center p-4 border-b bg-stone-50">
               <h3 className="font-bold text-stone-700 flex items-center gap-2">
                 <FileText size={18} className="text-emerald-600"/> 
-                Letztes Update: 2025
+                Letztes Update: Mai 2026
               </h3>
               <div className="flex items-center gap-3">
                 <a 
@@ -535,7 +763,7 @@ const Portfolio = () => {
                   </div>
                   <div className="flex flex-col items-center sm:items-start space-y-1">
                       <div className="text-2xl md:text-3xl font-bold text-stone-800 flex items-center gap-2">
-                          15+ <Code size={18} className="text-blue-500" />
+                          18+ <Code size={18} className="text-blue-500" />
                       </div>
                       <div className="text-xs md:text-sm text-stone-500 font-medium uppercase tracking-wide text-center sm:text-left">{t.hero.stats.skills}</div>
                   </div>
@@ -557,7 +785,18 @@ const Portfolio = () => {
                       
                       <div className="absolute inset-0 bg-stone-200 rounded-[3rem] transform rotate-3"></div>
                       
-                      <div className="absolute inset-0 rounded-[3rem] overflow-hidden transform -rotate-2 transition-transform duration-500 hover:rotate-0 relative">
+                      <div
+                        className="absolute inset-0 rounded-[3rem] overflow-hidden transform -rotate-2 transition-transform duration-500 hover:rotate-0 relative cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-300"
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Show next profile photo"
+                        onPointerDown={handleProfilePointerDown}
+                        onPointerUp={handleProfilePointerUp}
+                        onPointerCancel={() => {
+                          profilePointerStartRef.current = null;
+                        }}
+                        onKeyDown={handleProfileKeyDown}
+                      >
                         
                         <Swiper
                           effect={'cards'}
@@ -661,40 +900,47 @@ const Portfolio = () => {
         </div>
       </section>
 
-      <section id="experience" className="py-24 bg-white">
-        <div className="container mx-auto px-6 max-w-4xl">
+      <section id="experience" className="py-24 bg-white overflow-hidden">
+        <div className="container mx-auto px-6 max-w-6xl">
           <div className="flex items-center gap-4 mb-16">
             <div className="h-px flex-1 bg-stone-200"></div>
             <h2 className="text-3xl font-serif text-stone-800">{t.experience.title}</h2>
             <div className="h-px flex-1 bg-stone-200"></div>
           </div>
 
-          <div className="relative space-y-12 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-stone-200 before:to-transparent">
-            {experiences.map((exp, index) => (
-              <div key={index} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-4 border-white shadow-lg shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 ${exp.bg}`}>
-                  {exp.icon}
-                </div>
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-stone-50 p-6 rounded-2xl border border-stone-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative">
-                  <div className="absolute top-4 -left-2 w-4 h-4 bg-stone-50 rotate-45 border-l border-b border-stone-100 md:hidden"></div>
-                  <div className="hidden md:block absolute top-3 w-4 h-4 bg-stone-50 rotate-45 border-t border-l border-stone-100 group-odd:-right-2 group-odd:rotate-[135deg] group-even:-left-2 group-even:-rotate-45"></div>
+          <div className="-mx-6 overflow-x-auto px-6 pb-5 snap-x snap-mandatory scroll-px-6">
+            <div className="relative grid min-w-[1040px] grid-cols-4 gap-5 lg:min-w-0">
+              <div className="pointer-events-none absolute left-12 right-12 top-10 h-0.5 bg-gradient-to-r from-transparent via-emerald-200 to-transparent"></div>
+              {experiences.map((exp, index) => (
+                <article key={exp.company} className="relative flex flex-col snap-center">
+                  <div className="relative z-10 mx-auto mb-7 flex h-20 w-36 items-center justify-center rounded-2xl border border-stone-200 bg-white p-3 shadow-lg shadow-stone-200/70 ring-8 ring-white transition-transform duration-300 hover:-translate-y-1">
+                    <exp.Logo className={exp.logoClassName} />
+                  </div>
 
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-2">
-                    <h4 className="font-bold text-stone-800">{exp.company}</h4>
-                    <span className="text-xs font-bold px-2 py-1 bg-white rounded-md text-stone-500 shadow-sm border border-stone-100">{exp.period}</span>
-                  </div>
-                  <div className="text-emerald-600 font-medium text-sm mb-3">{exp.role}</div>
-                  <p className="text-stone-600 text-sm leading-relaxed mb-4">{exp.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {exp.tags.map(tag => (
-                      <span key={tag} className="text-xs text-stone-500 bg-white px-2 py-1 rounded border border-stone-200">
-                        #{tag}
+                  <div className={`relative min-h-[300px] rounded-2xl border border-stone-100 bg-stone-50 p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${index % 2 === 1 ? 'mt-8' : ''}`}>
+                    <div className="mb-4 flex items-start justify-between gap-3">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-xs font-bold text-emerald-700 shadow-sm ring-1 ring-stone-100">
+                        {String(index + 1).padStart(2, '0')}
+                      </div>
+                      <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-stone-500 shadow-sm ring-1 ring-stone-100">
+                        {exp.period}
                       </span>
-                    ))}
+                    </div>
+
+                    <h4 className="text-lg font-bold text-stone-800">{exp.company}</h4>
+                    <div className="mb-3 mt-1 text-sm font-medium text-emerald-600">{exp.role}</div>
+                    <p className="mb-5 text-sm leading-relaxed text-stone-600">{exp.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {exp.tags.map(tag => (
+                        <span key={tag} className="rounded border border-stone-200 bg-white px-2 py-1 text-xs text-stone-500">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -711,11 +957,10 @@ const Portfolio = () => {
              </div>
            </div>
 
-           <div className="grid md:grid-cols-3 gap-8">
-              {mainProjects.map((project, index) => (
+           <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              {mainProjects.map((project) => (
                 <div 
-                  key={index} 
-                  // FIXED: Mobile check for Main Projects grid
+                  key={project.id} 
                   onClick={() => {
                       if (project.isGroup) {
                           setShowUniGroup(true);
@@ -727,35 +972,23 @@ const Portfolio = () => {
                           }
                       }
                   }}
-                  className={`group relative bg-white rounded-3xl overflow-hidden border hover:shadow-2xl transition-all duration-500 flex flex-col ${project.color} cursor-pointer`}
+                  className={`group relative min-h-[190px] overflow-hidden rounded-3xl border border-white/80 ${project.color} p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer`}
                 >
-                  <div className="relative h-64 overflow-hidden flex items-center justify-center p-10">
-                    <div className="w-full h-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-700 ease-out">
-                       {project.Logo && <project.Logo className="w-full h-full max-w-[180px] opacity-80 mix-blend-multiply" />}
-                    </div>
+                  <div className="pointer-events-none absolute inset-x-4 top-4 h-24 rounded-full bg-white/45 blur-2xl transition-opacity duration-300 group-hover:opacity-80"></div>
+
+                  <div className="relative flex h-24 items-center justify-center rounded-2xl border border-white/80 bg-white/75 p-4 shadow-sm">
+                    {project.Logo ? (
+                      <project.Logo className={getProjectLogoClassName(project.id)} />
+                    ) : project.icon ? (
+                      <div className="flex h-full w-full items-center justify-center opacity-90">
+                        {project.icon}
+                      </div>
+                    ) : null}
                   </div>
 
-                  <div className="p-8 flex-1 flex flex-col bg-white relative z-20">
-                    <div className="text-xs font-bold text-emerald-600 mb-2 uppercase tracking-wider">{project.category}</div>
-                    <h4 className="text-2xl font-bold text-stone-800 mb-3 group-hover:text-emerald-700 transition-colors flex items-center justify-between">
-                        {project.title}
-                        {project.isGroup 
-                            ? <Folder size={20} className="opacity-0 group-hover:opacity-100 transition-opacity text-indigo-500" />
-                            : <Eye size={20} className="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-500" />
-                        }
-                    </h4>
-                    <p className="text-stone-500 text-sm leading-relaxed mb-6 line-clamp-3">
-                      {project.description}
-                    </p>
-                    
-                    <div className="mt-auto pt-6 border-t border-stone-100 flex flex-wrap gap-2">
-                      {project.metrics?.map((m, i) => (
-                        <span key={i} className="text-xs font-medium text-stone-500 bg-stone-50 px-3 py-1 rounded-full">
-                          {m}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                  <h4 className="relative mt-5 text-center text-base font-bold leading-snug text-stone-800 transition-colors duration-300 group-hover:text-emerald-700">
+                    {project.title}
+                  </h4>
                 </div>
               ))}
            </div>
@@ -774,7 +1007,11 @@ const Portfolio = () => {
             {t.contact.text}
           </p>
 
-          <div className="grid sm:grid-cols-3 gap-4 max-w-5xl mx-auto mb-16">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto mb-16">
+            <a href="tel:+491624562672" className="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors group">
+              <Phone className="text-emerald-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <span className="text-xs md:text-sm font-medium text-white whitespace-nowrap">+49 162 4562672</span>
+            </a>
             <a href="mailto:nguyenphanmyanh@gmail.com" className="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors group">
               <Mail className="text-emerald-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
               <span className="text-xs md:text-sm font-medium text-white">nguyenphanmyanh@gmail.com</span>
@@ -790,7 +1027,7 @@ const Portfolio = () => {
           </div>
 
           <div className="text-sm text-stone-600 border-t border-white/10 pt-8">
-            <p>© 2025 Phan My Anh Nguyen. {t.contact.footer} <Heart size={12} className="inline text-rose-500 mx-1 fill-rose-500" /> und Code.</p>
+            <p>© 2026 Phan My Anh Nguyen. {t.contact.footer} <Heart size={12} className="inline text-rose-500 mx-1 fill-rose-500" /> und Code.</p>
           </div>
         </div>
       </section>

@@ -1,3 +1,141 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  @media (pointer: fine) {
+    .figma-cursor {
+      --cursor-x: -80px;
+      --cursor-y: -80px;
+      --cursor-angle: -151deg;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate3d(var(--cursor-x), var(--cursor-y), 0);
+      transition: opacity 120ms ease;
+      will-change: transform;
+    }
+
+    .figma-cursor.is-visible {
+      opacity: 1;
+    }
+
+    .figma-cursor__inner {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      transform-origin: 0 0;
+      transition: transform 160ms ease;
+    }
+
+    .figma-cursor.is-interactive .figma-cursor__inner {
+      transform: scale(1.08) rotate(-2deg);
+    }
+
+    .figma-cursor.is-pressing .figma-cursor__inner {
+      transform: scale(0.94);
+    }
+
+    .figma-cursor__arrow {
+      position: absolute;
+      top: -5px;
+      left: -8px;
+      display: block;
+      width: 34px;
+      height: 34px;
+      filter: drop-shadow(0 8px 14px rgb(15 23 42 / 0.2));
+      transform: rotate(calc(var(--cursor-angle) + 135deg));
+      transform-origin: 8px 6px;
+      user-select: none;
+    }
+
+    .figma-cursor__click-burst {
+      --burst-x: -80px;
+      --burst-y: -80px;
+      position: fixed;
+      top: var(--burst-y);
+      left: var(--burst-x);
+      z-index: 10000;
+      width: 44px;
+      height: 44px;
+      pointer-events: none;
+      transform: translate(-50%, -132%) scale(0.76) rotate(-8deg);
+      animation: figma-cursor-click-burst 640ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .figma-cursor__spark {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      filter: drop-shadow(0 4px 8px rgb(16 185 129 / 0.2));
+    }
+
+    .figma-cursor__spark-halo,
+    .figma-cursor__spark-shape {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: figma-cursor-spark-shrink 640ms ease-out forwards;
+    }
+
+    .figma-cursor__spark-halo {
+      fill: #ffffff;
+      stroke: #ffffff;
+      stroke-width: 12px;
+      stroke-linecap: square;
+      stroke-linejoin: round;
+    }
+
+    .figma-cursor__spark-shape {
+      fill: #10b981;
+      stroke: #064e3b;
+      stroke-width: 2.1px;
+      stroke-linecap: square;
+      stroke-linejoin: round;
+    }
+
+    .figma-cursor__spark-small {
+      animation-delay: 45ms;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .figma-cursor,
+    .figma-cursor__inner,
+    .figma-cursor__click-burst,
+    .figma-cursor__spark-halo,
+    .figma-cursor__spark-shape {
+      animation: none;
+      transition: none;
+    }
+  }
+}
+
+@keyframes figma-cursor-click-burst {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -116%) scale(0.72) rotate(-9deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -158%) scale(0.98) rotate(5deg);
+  }
+}
+
+@keyframes figma-cursor-spark-shrink {
+  0% {
+    transform: scale(0.88);
+  }
+
+  18% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0);
+  }
+}
